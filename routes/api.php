@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Therapist\ServiceCategoryController;
 use App\Http\Controllers\Therapist\TherapistServiceController;
 use App\Http\Controllers\Therapist\ServiceSubCategoryController;
+use App\Http\Controllers\PatientController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,3 +39,9 @@ Route::get('/therapistService', [TherapistServiceController::class, 'index']);
 Route::post('/therapistService/store', [TherapistServiceController::class, 'store']);
 Route::post('/therapistService/update/{id}', [TherapistServiceController::class, 'update']);
 Route::post('/therapistService/delete/{id}', [TherapistServiceController::class, 'destroy']);
+
+//Patient Create
+Route::get('/patient', [PatientController::class, 'index']);
+Route::post('/patient/store', [PatientController::class, 'store']);
+Route::post('/therapistService/update/{id}', [PatientController::class, 'update']);
+Route::post('/therapistService/delete/{id}', [PatientController::class, 'destroy']);
