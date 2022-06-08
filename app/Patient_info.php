@@ -22,6 +22,7 @@ class Patient_info extends Model
     public function file_info(){
        
         return $this->hasOne(Patient_file_upload::class, 'patient_id');
+        // return $this->hasOne('App\Patient_file_upload','patient_id');
         
     }
 }

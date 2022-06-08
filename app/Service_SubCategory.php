@@ -12,4 +12,9 @@ class Service_SubCategory extends Model
         'service_subcategory_name','status','remarks','create_by','create_date','modified_by','modified_date','service_category_id'
     ];
     public $timestamps = false;
+
+    public function categories(){
+        return $this->belongsTo(Service_Category::class,'service_category_id');
+    }
+   
 }

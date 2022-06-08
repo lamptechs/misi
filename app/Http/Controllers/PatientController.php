@@ -54,7 +54,8 @@ class PatientController extends Controller
             [
                 'first_name' => 'required',
                 'last_name' => 'required',
-                'picture' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:10240'
+                'picture' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:10240',
+                // 'file' => 'required'
     
             ]
            );
@@ -70,12 +71,12 @@ class PatientController extends Controller
             try{
 
                 DB::beginTransaction();
-            if( $request->id == 0 ){
+            // if( $request->id == 0 ){
                 $data = $this->getModel();
                 $data->create_by = 1;
                 $data->create_date = Carbon::Now();
                 
-             }
+            //  }
             //else{
             //     $data = $this->getModel()->find($request->id);
             //     $data->modified_by = 1;
@@ -114,17 +115,21 @@ class PatientController extends Controller
             $data->admin_remarks = $request->remarks ?? '';
             $data->patient_password = bcrypt($request->password);
             $data->status = $request->status;
+
             
             $this->saveFileInfo($request, $data);
             $data->save();
+
+            
+            
             // $this->saveFirmInfo($request, $data);
             
             
             DB::commit();
                     try{
-                        if($request->id == 0){
+                        // if($request->id == 0){
                             event(new Registered($data));
-                        }
+                        // }
                     }catch(Exception $e){
                         //
                     }
@@ -141,7 +146,8 @@ class PatientController extends Controller
      */
     public function saveFileInfo($request, $patient){
         $data = $patient->file_info;
-        if($data == null){
+        // $data = Patient_file_upload::all();
+        if(empty($data)){
             $data = new Patient_file_upload();            
             $data->create_by = 1;
             $data->create_date = Carbon::Now();
@@ -150,6 +156,15 @@ class PatientController extends Controller
         //     $data->updated_by = $request->updated_by;
         // }
 
+        
+
+
+        $data->patient_id = $patient->id;
+        $data->file_name = $fileName;
+        $data->file_location = $fileUrl;
+        $data->file_type = $extension;
+        $data->file_remarks = $request->file_remarks ?? '';
+        $data->status = $request->status;
         if($request->file != null)
             {
                 $extension = $request->file->extension();
@@ -158,14 +173,6 @@ class PatientController extends Controller
                 $file = $request->file->move(public_path('upload'), $fileName);
                 $fileUrl = url('public/upload/' . $fileName);
             }
-
-
-        $data->patient_id = $patient->patient_id;
-        $data->file_name = $fileName;
-        $data->file_location = $fileUrl;
-        $data->file_type = $extension;
-        $data->file_remarks = $request->file_remarks ?? '';
-        $data->status = $request->status;
         $data->save();
        
     }

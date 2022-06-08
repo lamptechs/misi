@@ -13,4 +13,11 @@ class Therapist_Service extends Model
         'service_subcategory_id'
     ];
     public $timestamps = false;
+
+    public function categories(){
+        return $this->belongsTo(Service_Category::class,'service_category_id');
+    }
+    public function sub_categories(){
+        return $this->belongsTo(Service_SubCategory::class,'service_subcategory_id');
+    }
 }
