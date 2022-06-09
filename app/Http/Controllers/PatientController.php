@@ -116,9 +116,9 @@ class PatientController extends Controller
             $data->patient_password = bcrypt($request->password);
             $data->status = $request->status;
 
-            
-            $this->saveFileInfo($request, $data);
             $data->save();
+            $this->saveFileInfo($request, $data);
+            
 
             
             

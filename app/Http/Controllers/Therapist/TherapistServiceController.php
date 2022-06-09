@@ -57,7 +57,7 @@ class TherapistServiceController extends Controller
             $therapistservice = new Therapist_Service();
             $therapistservice->therapist_service_name = $request->name;
             $therapistservice->status = $request->status;
-            $therapistservice->remarks = $request->remarks ?? "null";
+            $therapistservice->remarks = $request->remarks ?? "";
             $therapistservice->create_by = 1;
             $therapistservice->create_date = Carbon::Now();
             $therapistservice->service_category_id = $request->service_category_id;
@@ -116,7 +116,7 @@ class TherapistServiceController extends Controller
             $therapistservice = Therapist_Service::find($id);
             $therapistservice->therapist_service_name = $request->name;
             $therapistservice->status = $request->status;
-            $therapistservice->remarks = $request->remarks ?? "null";
+            $therapistservice->remarks = $request->remarks ?? "";
             $therapistservice->modified_by = 1;
             $therapistservice->modified_date = Carbon::Now();
             $therapistservice->service_category_id = $request->service_category_id;

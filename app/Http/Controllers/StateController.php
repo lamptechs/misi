@@ -1,14 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Therapist;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Service_SubCategory;
+use App\State_city;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 
-class ServiceSubCategoryController extends Controller
+class StateController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,7 +16,7 @@ class ServiceSubCategoryController extends Controller
      */
     public function index()
     {
-        return Service_SubCategory::all();
+          return State_city::all();
     }
 
     /**
@@ -54,15 +53,14 @@ class ServiceSubCategoryController extends Controller
                 );
             }
    
-            $subservice = new Service_SubCategory();
-            $subservice->service_subcategory_name = $request->name;
-            $subservice->status = $request->status;
-            $subservice->remarks = $request->remarks ?? "";
-            $subservice->create_by = 1;
-            $subservice->create_date = Carbon::Now();
-            $subservice->service_category_id = $request->service_category_id;
-            $subservice->save();
-            return $subservice;
+            $state = new State_city();
+            $state->state_city_name = $request->name;
+            $state->status = $request->status;
+            $state->remarks = $request->remarks ?? "";
+            $state->create_by = 1;
+            $state->create_date = Carbon::Now();
+            $state->save();
+            return $state;
     }
 
     /**
@@ -112,15 +110,14 @@ class ServiceSubCategoryController extends Controller
                 );
             }
    
-            $subservice = Service_SubCategory::find($id);
-            $subservice->service_subcategory_name = $request->name;
-            $subservice->status = $request->status;
-            $subservice->remarks = $request->remarks ?? "";
-            $subservice->modified_by = 1;
-            $subservice->modified_date = Carbon::Now();
-            $subservice->service_category_id = $request->service_category_id;
-            $subservice->save();
-            return $subservice;
+            $state = State_city::find($id);
+            $state->state_city_name = $request->name;
+            $state->status = $request->status;
+            $state->remarks = $request->remarks ?? "";
+            $state->modified_by = 1;
+            $state->modified_date = Carbon::Now();
+            $state->save();
+            return $state;
     }
 
     /**
@@ -131,6 +128,6 @@ class ServiceSubCategoryController extends Controller
      */
     public function destroy($id)
     {
-        return Service_SubCategory::destroy($id);
+        return State_city::destroy($id);
     }
 }

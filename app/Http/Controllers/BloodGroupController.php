@@ -1,14 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Therapist;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Service_SubCategory;
+use App\Blood_group;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 
-class ServiceSubCategoryController extends Controller
+class BloodGroupController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,7 +16,7 @@ class ServiceSubCategoryController extends Controller
      */
     public function index()
     {
-        return Service_SubCategory::all();
+        return Blood_group::all();
     }
 
     /**
@@ -41,7 +40,7 @@ class ServiceSubCategoryController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'name' => 'required|min:4',
+                'name' => 'required|min:1',
                 'remarks' => 'nullable|min:4'
     
             ]
@@ -54,15 +53,14 @@ class ServiceSubCategoryController extends Controller
                 );
             }
    
-            $subservice = new Service_SubCategory();
-            $subservice->service_subcategory_name = $request->name;
-            $subservice->status = $request->status;
-            $subservice->remarks = $request->remarks ?? "";
-            $subservice->create_by = 1;
-            $subservice->create_date = Carbon::Now();
-            $subservice->service_category_id = $request->service_category_id;
-            $subservice->save();
-            return $subservice;
+            $blood_group = new Blood_group();
+            $blood_group->blood_group_name = $request->name;
+            $blood_group->status = $request->status;
+            $blood_group->remarks = $request->remarks ?? "";
+            $blood_group->create_by = 1;
+            $blood_group->create_date = Carbon::Now();
+            $blood_group->save();
+            return $blood_group;
     }
 
     /**
@@ -99,7 +97,7 @@ class ServiceSubCategoryController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'name' => 'required|min:4',
+                'name' => 'required|min:1',
                 'remarks' => 'nullable|min:4'
     
             ]
@@ -112,15 +110,14 @@ class ServiceSubCategoryController extends Controller
                 );
             }
    
-            $subservice = Service_SubCategory::find($id);
-            $subservice->service_subcategory_name = $request->name;
-            $subservice->status = $request->status;
-            $subservice->remarks = $request->remarks ?? "";
-            $subservice->modified_by = 1;
-            $subservice->modified_date = Carbon::Now();
-            $subservice->service_category_id = $request->service_category_id;
-            $subservice->save();
-            return $subservice;
+            $blood_group = Blood_group::find($id);
+            $blood_group->blood_group_name = $request->name;
+            $blood_group->status = $request->status;
+            $blood_group->remarks = $request->remarks ?? "";
+            $blood_group->modified_by = 1;
+            $blood_group->modified_date = Carbon::Now();
+            $blood_group->save();
+            return $blood_group;
     }
 
     /**
@@ -131,6 +128,6 @@ class ServiceSubCategoryController extends Controller
      */
     public function destroy($id)
     {
-        return Service_SubCategory::destroy($id);
+        return Blood_group::destroy($id);
     }
 }

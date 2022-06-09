@@ -37,7 +37,7 @@ class ServiceCategoryController extends Controller
          $service = new Service_Category();
          $service->service_category_name = $request->name;
          $service->status = $request->status;
-         $service->remarks = $request->remarks ?? "null";
+         $service->remarks = $request->remarks ?? "";
          $service->create_by = 1;
          $service->create_date = Carbon::Now();
          $service->save();
@@ -66,7 +66,7 @@ class ServiceCategoryController extends Controller
          $service = Service_Category::find($id);
          $service->service_category_name = $request->name;
          $service->status = $request->status;
-         $service->remarks = $request->remarks ?? "null";
+         $service->remarks = $request->remarks ?? "";
         //  $service->create_by = 1;
         //  $service->create_date = Carbon::Now();
          $service->modified_by = 1;
