@@ -12,8 +12,9 @@ class Patient_file_upload extends Model
     //     'file_name','file_location','file_type','file_remarks','patient_id','status','create_by','create_date','modified_by','modified_date'
     // ];
     // public $timestamps = false;
-    public function patient(){
-        return $this->belongsTo(Patient_info::class, 'id');
-        // return $this->belongsTo('App\Patient_info');
-    }
+    // public function patient(){
+    //     // return $this->hasOne(Patient_info::class);
+    //     return $this->belongsTo(Patient_info::class, 'id');
+    //     // return $this->belongsTo('App\Patient_info');
+    // }
 }

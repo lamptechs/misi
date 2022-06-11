@@ -1,26 +1,19 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Therapist;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Patient_info;
-use App\Patient_file_upload;
+use App\Therapist_info;
+use App\Therapist_file_upload;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Auth\Events\Registered;
 use Exception;
 
-class PatientController extends Controller
+class TherapistController extends Controller
 {
-
-    /**
-     * Get Current Table Model
-     */
-    private function getModel(){
-        return new Patient_info();
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -28,7 +21,7 @@ class PatientController extends Controller
      */
     public function index()
     {
-        return Patient_info::all();
+        return Therapist_info::all();
     }
 
     /**
@@ -82,42 +75,35 @@ class PatientController extends Controller
             //     $data->modified_by = 1;
             // }
 
-            if($request->picture != null)
-            {
-                $id = uniqid(5);
-                $imageName = $id.'.'.$request->picture->extension();  
-                $image = $request->picture->move(public_path('upload'), $imageName);
-                $imageUrl = url('public/upload/' . $imageName);
-            }
+            // if($request->picture != null)
+            // {
+            //     $id = uniqid(5);
+            //     $imageName = $id.'.'.$request->picture->extension();  
+            //     $image = $request->picture->move(public_path('upload'), $imageName);
+            //     $imageUrl = url('public/upload/' . $imageName);
+            // }
 
-            $data->patient_first_name = $request->first_name;                  
-            $data->patient_last_name = $request->last_name;
-            $data->patient_picture_name = $imageName;            
-            $data->patient_picture_location = $imageUrl;            
-            $data->patient_email = $request->email;
-            $data->patient_phone = $request->phone;
-            $data->patient_alternet_phone = $request->alternet_phone ?? 0;
-            // $data->password = !empty($request->password) ? bcrypt($request->password) : $data->password;
-            $data->patient_address = $request->address;
-            $data->patient_area = $request->area;
-            $data->patient_city = $request->city;
-            $data->patient_country = $request->country;
+            $data->therapist_first_name = $request->first_name;                  
+            $data->therapist_last_name = $request->last_name;         
+            $data->therapist_email = $request->email;
+            $data->therapist_phone = $request->phone;
+            $data->residential_address = $request->address;
+            $data->language_preference = $request->language;
             $data->bsn_number = $request->bsn_number;
             $data->dob_number = $request->dob_number;
             $data->insurance_number = $request->insurance_number;
             $data->emergency_contact = $request->emergency_contact ?? 0;
-            $data->age = $request->age;
-            $data->sex = $request->sex;
-            $data->marital_status = $request->marital_status;
-            $data->medical_history = $request->medical_history;
+            $data->gender = $request->gender;
             $data->date_of_birth = $request->date_of_birth;
-            $data->blood_group = $request->blood_group;
-            $data->occupation = $request->occupation;
-            $data->admin_remarks = $request->remarks ?? '';
-            $data->patient_password = bcrypt($request->password);
+            $data->therapist_type_id = $request->therapist_type_id;
+            $data->blood_group_id = $request->blood_group_id;
+            $data->state_city_id = $request->state_city_id;
+            $data->country_id = $request->country_id;
+            $data->therapist_degree_id = $request->therapist_degree_id;
+            $data->remarks = $request->remarks ?? '';
             $data->status = $request->status;
             $data->save();
-            $this->saveFileInfo($request, $data);
+            // $this->saveFileInfo($request, $data);
             
             DB::commit();
                     try{
@@ -133,16 +119,12 @@ class PatientController extends Controller
             }
             return $data;
     }
-   
 
-
-    /**
-     * Save File Info
-     */
-    public function saveFileInfo($request, $patient){
-        $data = $patient->file_info;
+    // Save File Info
+    public function saveFileInfo($request, $therapist){
+        $data = $therapist->file_info;
         if(empty($data)){
-            $data = new Patient_file_upload();            
+            $data = new Therapist_file_upload();            
             $data->create_by = 1;
             $data->create_date = Carbon::Now();
         }
@@ -160,7 +142,7 @@ class PatientController extends Controller
         }
 
 
-        $data->patient_id = $patient->id;
+        $data->patient_id = $therapist->id;
         $data->file_name = $fileName;
         $data->file_location = $fileUrl;
         $data->file_type = $extension;
