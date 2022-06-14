@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\V1;
 
+use App\Http\Controllers\Controller;
 use App\Http\Resources\ServiceCategoryResource;
 use Illuminate\Http\Request;
 use App\Service_Category;
 use Carbon\Carbon;
 use Exception;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 
 class ServiceCategoryController extends Controller
@@ -17,7 +17,6 @@ class ServiceCategoryController extends Controller
         return Service_Category::all();
     }
 
-    //Store Services
     public function store(Request $request){
 
         try{
