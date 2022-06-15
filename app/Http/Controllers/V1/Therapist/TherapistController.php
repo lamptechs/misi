@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Therapist;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Controller\V1;
 use Illuminate\Http\Request;
 use App\Therapist_info;
 use App\Therapist_file_upload;

@@ -1,13 +1,15 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Therapist;
 
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\Controller\V1;
+use App\Therapist_degree;
 use Illuminate\Http\Request;
-use App\Therapist_type;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 
-class TherapistTypeController extends Controller
+class TherapistDegreeController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,7 +18,7 @@ class TherapistTypeController extends Controller
      */
     public function index()
     {
-        return Therapist_type::all();
+        return Therapist_degree::all();
     }
 
     /**
@@ -40,7 +42,7 @@ class TherapistTypeController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'name' => 'required|min:4',
+                'name' => 'required|min:2',
                 'remarks' => 'nullable|min:4'
     
             ]
@@ -53,14 +55,14 @@ class TherapistTypeController extends Controller
                 );
             }
    
-            $therapist_type = new Therapist_type();
-            $therapist_type->therapist_type_name = $request->name;
-            $therapist_type->status = $request->status;
-            $therapist_type->remarks = $request->remarks ?? "";
-            $therapist_type->create_by = 1;
-            $therapist_type->create_date = Carbon::Now();
-            $therapist_type->save();
-            return $therapist_type;
+            $degree = new Therapist_degree();
+            $degree->degree_name = $request->name;
+            $degree->status = $request->status;
+            $degree->remarks = $request->remarks ?? "";
+            $degree->create_by = 1;
+            $degree->create_date = Carbon::Now();
+            $degree->save();
+            return $degree;
     }
 
     /**
@@ -97,7 +99,7 @@ class TherapistTypeController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'name' => 'required|min:4',
+                'name' => 'required|min:2',
                 'remarks' => 'nullable|min:4'
     
             ]
@@ -110,14 +112,14 @@ class TherapistTypeController extends Controller
                 );
             }
    
-            $therapist_type = Therapist_type::find($id);
-            $therapist_type->therapist_type_name = $request->name;
-            $therapist_type->status = $request->status;
-            $therapist_type->remarks = $request->remarks ?? "";
-            $therapist_type->modified_by = 1;
-            $therapist_type->modified_date = Carbon::Now();
-            $therapist_type->save();
-            return $therapist_type;
+            $degree = Therapist_degree::find($id);
+            $degree->degree_name = $request->name;
+            $degree->status = $request->status;
+            $degree->remarks = $request->remarks ?? "";
+            $degree->modified_by = 1;
+            $degree->modified_date = Carbon::Now();
+            $degree->save();
+            return $degree;
     }
 
     /**
@@ -128,6 +130,6 @@ class TherapistTypeController extends Controller
      */
     public function destroy($id)
     {
-        return Therapist_type::destroy($id);
+        return Therapist_degree::destroy($id);
     }
 }

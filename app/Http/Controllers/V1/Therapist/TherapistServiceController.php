@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Therapist\V1;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Blood_group;
+use App\Therapist_Service;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 
-class BloodGroupController extends Controller
+class TherapistServiceController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,7 +17,7 @@ class BloodGroupController extends Controller
      */
     public function index()
     {
-        return Blood_group::all();
+        return Therapist_Service::all();
     }
 
     /**
@@ -40,7 +41,7 @@ class BloodGroupController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'name' => 'required|min:1',
+                'name' => 'required|min:4',
                 'remarks' => 'nullable|min:4'
     
             ]
@@ -53,14 +54,16 @@ class BloodGroupController extends Controller
                 );
             }
    
-            $blood_group = new Blood_group();
-            $blood_group->blood_group_name = $request->name;
-            $blood_group->status = $request->status;
-            $blood_group->remarks = $request->remarks ?? "";
-            $blood_group->create_by = 1;
-            $blood_group->create_date = Carbon::Now();
-            $blood_group->save();
-            return $blood_group;
+            $therapistservice = new Therapist_Service();
+            $therapistservice->therapist_service_name = $request->name;
+            $therapistservice->status = $request->status;
+            $therapistservice->remarks = $request->remarks ?? "";
+            $therapistservice->create_by = 1;
+            $therapistservice->create_date = Carbon::Now();
+            $therapistservice->service_category_id = $request->service_category_id;
+            $therapistservice->service_subcategory_id = $request->service_subcategory_id;
+            $therapistservice->save();
+            return $therapistservice;
     }
 
     /**
@@ -97,7 +100,7 @@ class BloodGroupController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'name' => 'required|min:1',
+                'name' => 'required|min:4',
                 'remarks' => 'nullable|min:4'
     
             ]
@@ -110,14 +113,16 @@ class BloodGroupController extends Controller
                 );
             }
    
-            $blood_group = Blood_group::find($id);
-            $blood_group->blood_group_name = $request->name;
-            $blood_group->status = $request->status;
-            $blood_group->remarks = $request->remarks ?? "";
-            $blood_group->modified_by = 1;
-            $blood_group->modified_date = Carbon::Now();
-            $blood_group->save();
-            return $blood_group;
+            $therapistservice = Therapist_Service::find($id);
+            $therapistservice->therapist_service_name = $request->name;
+            $therapistservice->status = $request->status;
+            $therapistservice->remarks = $request->remarks ?? "";
+            $therapistservice->modified_by = 1;
+            $therapistservice->modified_date = Carbon::Now();
+            $therapistservice->service_category_id = $request->service_category_id;
+            $therapistservice->service_subcategory_id = $request->service_subcategory_id;
+            $therapistservice->save();
+            return $therapistservice;
     }
 
     /**
@@ -128,6 +133,6 @@ class BloodGroupController extends Controller
      */
     public function destroy($id)
     {
-        return Blood_group::destroy($id);
+        return Therapist_Service::destroy($id);
     }
 }
