@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ServiceCategoryResource extends JsonResource
+class ServiceSubCategoryResource extends JsonResource
 {
     protected $withoutFields = [];
 
@@ -32,6 +32,7 @@ class ServiceCategoryResource extends JsonResource
     public function toArray($request)
     {
         return $this->filter([
+            "service_categorie_id"      => $this->service_categorie_id,
             "name"                      => $this->name,
             "status"                    => $this->status,
             "remarks"                   => $this->remarks

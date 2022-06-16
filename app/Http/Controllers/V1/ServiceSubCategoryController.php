@@ -4,9 +4,10 @@ namespace App\Http\Controllers\V1;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Service_SubCategory;
+use App\Models\ServiceSubCategory;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\ServiceSubCategoryResource;
 
 class ServiceSubCategoryController extends Controller
 {
@@ -17,7 +18,7 @@ class ServiceSubCategoryController extends Controller
      */
     public function index()
     {
-        return Service_SubCategory::all();
+        return ServiceSubCategory::all();
     }
 
     /**
@@ -38,31 +39,33 @@ class ServiceSubCategoryController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make(
-            $request->all(),
-            [
+        try{
+            $validator = Validator::make($request->all(), [
                 'name' => 'required|min:4',
-                'remarks' => 'nullable|min:4'
-    
-            ]
-           );
-            
+                'remarks' => 'nullable|min:4' 
+            ]);
+             
             if ($validator->fails()) {
-                return response()->json(
-                    [$validator->errors()],
-                    422
-                );
+    
+                $this->apiOutput($this->getValidationError($validator), 200);
             }
-   
-            $subservice = new Service_SubCategory();
-            $subservice->service_subcategory_name = $request->name;
+    
+            $subservice = new ServiceSubCategory();
+            $subservice->service_categorie_id = $request->service_categorie_id;
+            $subservice->name = $request->name;
             $subservice->status = $request->status;
             $subservice->remarks = $request->remarks ?? "";
-            $subservice->create_by = 1;
-            $subservice->create_date = Carbon::Now();
-            $subservice->service_category_id = $request->service_category_id;
+            $subservice->created_by = 1;
+            $subservice->created_at = Carbon::Now();
             $subservice->save();
-            return $subservice;
+            
+            $this->apiSuccess();
+            $this->data = (new ServiceSubCategoryResource($subservice));
+            return $this->apiOutput();
+
+        }catch(Exception $e){
+            return $this->apiOutput($this->getError( $e), 500);
+        }
     }
 
     /**
@@ -96,31 +99,33 @@ class ServiceSubCategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $validator = Validator::make(
-            $request->all(),
-            [
+        try{
+            $validator = Validator::make($request->all(), [
                 'name' => 'required|min:4',
-                'remarks' => 'nullable|min:4'
-    
-            ]
-           );
-            
+                'remarks' => 'nullable|min:4' 
+            ]);
+             
             if ($validator->fails()) {
-                return response()->json(
-                    [$validator->errors()],
-                    422
-                );
+    
+                $this->apiOutput($this->getValidationError($validator), 200);
             }
-   
-            $subservice = Service_SubCategory::find($id);
-            $subservice->service_subcategory_name = $request->name;
+    
+            $subservice = ServiceSubCategory::find($id);
+            $subservice->service_categorie_id = $request->service_categorie_id;
+            $subservice->name = $request->name;
             $subservice->status = $request->status;
             $subservice->remarks = $request->remarks ?? "";
-            $subservice->modified_by = 1;
-            $subservice->modified_date = Carbon::Now();
-            $subservice->service_category_id = $request->service_category_id;
+            $subservice->updated_by = 1;
+            $subservice->updated_at = Carbon::Now();
             $subservice->save();
-            return $subservice;
+            
+            $this->apiSuccess();
+            $this->data = (new ServiceSubCategoryResource($subservice));
+            return $this->apiOutput();
+
+        }catch(Exception $e){
+            return $this->apiOutput($this->getError( $e), 500);
+        }
     }
 
     /**
@@ -131,6 +136,8 @@ class ServiceSubCategoryController extends Controller
      */
     public function destroy($id)
     {
-        return Service_SubCategory::destroy($id);
+        ServiceSubCategory::destroy($id);
+        $this->apiSuccess();
+        return $this->apiOutput("Service SubCategory Deleted Successfully", 200);
     }
 }
