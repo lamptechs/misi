@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\V1;
 
-use Illuminate\Http\Request;
-use App\Blood_group;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Models\BloodGroup;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\BloodGroupResource;
 
 class BloodGroupController extends Controller
 {
@@ -17,7 +18,7 @@ class BloodGroupController extends Controller
      */
     public function index()
     {
-        return Blood_group::all();
+        return BloodGroup::all();
     }
 
     /**
@@ -38,30 +39,28 @@ class BloodGroupController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make(
-            $request->all(),
-            [
-                'name' => 'required|min:1',
-                'remarks' => 'nullable|min:4'
-    
-            ]
-           );
+        try{
+            $validator = Validator::make($request->all(), [
+                'name' => 'required|min:4', 
+            ]);
             
-            if ($validator->fails()) {
-                return response()->json(
-                    [$validator->errors()],
-                    422
-                );
-            }
+           if ($validator->fails()) {
+    
+            $this->apiOutput($this->getValidationError($validator), 200);
+        }
    
-            $blood_group = new Blood_group();
-            $blood_group->blood_group_name = $request->name;
+            $blood_group = new BloodGroup();
+            $blood_group->name = $request->name;
             $blood_group->status = $request->status;
-            $blood_group->remarks = $request->remarks ?? "";
-            $blood_group->create_by = 1;
-            $blood_group->create_date = Carbon::Now();
+            $blood_group->created_by = 1;
+            $blood_group->created_at = Carbon::Now();
             $blood_group->save();
-            return $blood_group;
+            $this->apiSuccess();
+            $this->data = (new BloodGroupResource($blood_group));
+            return $this->apiOutput();
+        }catch(Exception $e){
+            return $this->apiOutput($this->getError( $e), 500);
+        }
     }
 
     /**
@@ -95,11 +94,11 @@ class BloodGroupController extends Controller
      */
     public function update(Request $request, $id)
     {
+        try{
         $validator = Validator::make(
             $request->all(),
             [
                 'name' => 'required|min:1',
-                'remarks' => 'nullable|min:4'
     
             ]
            );
@@ -111,14 +110,19 @@ class BloodGroupController extends Controller
                 );
             }
    
-            $blood_group = Blood_group::find($id);
-            $blood_group->blood_group_name = $request->name;
+            $blood_group = BloodGroup::find($id);
+            $blood_group->name = $request->name;
             $blood_group->status = $request->status;
-            $blood_group->remarks = $request->remarks ?? "";
-            $blood_group->modified_by = 1;
-            $blood_group->modified_date = Carbon::Now();
+            $blood_group->updated_by = 1;
+            $blood_group->updated_at = Carbon::Now();
             $blood_group->save();
-            return $blood_group;
+            $this->apiSuccess();
+            $this->data = (new BloodGroupResource($blood_group));
+            return $this->apiOutput();
+        }catch(Exception $e){
+            return $this->apiOutput($this->getError( $e), 500);
+        
+        }
     }
 
     /**
@@ -129,6 +133,9 @@ class BloodGroupController extends Controller
      */
     public function destroy($id)
     {
-        return Blood_group::destroy($id);
+        $blood_group = BloodGroup::find($id);
+        $blood_group->delete();
+        $this->apiSuccess();
+        return $this->apiOutput("Blood Group Deleted Successfully", 200);
     }
 }
