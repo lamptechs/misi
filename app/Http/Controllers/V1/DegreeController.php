@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\V1;
 
-use Illuminate\Http\Request;
-use App\Models\Country;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Models\Degree;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Exception;
 
-class CountryController extends Controller
+class DegreeController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,7 +18,7 @@ class CountryController extends Controller
      */
     public function index()
     {
-        return Country::all();
+        return Degree::all();
     }
 
 
@@ -30,11 +30,12 @@ class CountryController extends Controller
      */
     public function store(Request $request)
     {
+
         try{
         $validator = Validator::make(
             $request->all(),
             [
-                'name' => 'required|min:4',
+                'name' => 'required|min:2',
     
             ]
            );
@@ -44,12 +45,12 @@ class CountryController extends Controller
             $this->apiOutput($this->getValidationError($validator), 200);
            }
    
-            $country = new Country();
-            $country->name = $request->name;
-            $country->status = $request->status;
-            $country->created_by = 1;
-            $country->created_at = Carbon::Now();
-            $country->save();
+            $degree = new Degree();
+            $degree->name = $request->name;
+            $degree->status = $request->status;
+            $degree->created_by = 1;
+            $degree->created_at = Carbon::Now();
+            $degree->save();
             $this->apiSuccess();
             // $this->data = (new ServiceCategoryResource($service));
             return $this->apiOutput();
@@ -69,6 +70,16 @@ class CountryController extends Controller
         //
     }
 
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        //
+    }
 
     /**
      * Update the specified resource in storage.
@@ -83,7 +94,7 @@ class CountryController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'name' => 'required|min:4',
+                'name' => 'required|min:2',
                 'remarks' => 'nullable|min:4'
     
             ]
@@ -96,12 +107,12 @@ class CountryController extends Controller
                 );
             }
    
-            $country = Country::find($id);
-            $country->name = $request->name;
-            $country->status = $request->status;
-            $country->updated_by	 = 1;
-            $country->updated_at	 = Carbon::Now();
-            $country->save();
+            $degree = Degree::find($id);
+            $degree->name = $request->name;
+            $degree->status = $request->status;
+            $degree->updated_by = 1;
+            $degree->updated_at = Carbon::Now();
+            $degree->save();
             $this->apiSuccess();
             // $this->data = (new ServiceCategoryResource($service));
             return $this->apiOutput();
@@ -118,8 +129,8 @@ class CountryController extends Controller
      */
     public function destroy($id)
     {
-        Country::destroy($id);
+        Degree::destroy($id);
         $this->apiSuccess();
-        return $this->apiOutput("Country Deleted Successfully", 200);
+        return $this->apiOutput("Degree Deleted Successfully", 200);
     }
 }

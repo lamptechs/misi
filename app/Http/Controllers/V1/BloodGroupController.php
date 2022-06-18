@@ -47,7 +47,7 @@ class BloodGroupController extends Controller
            if ($validator->fails()) {
     
             $this->apiOutput($this->getValidationError($validator), 200);
-        }
+           }
    
             $blood_group = new BloodGroup();
             $blood_group->name = $request->name;

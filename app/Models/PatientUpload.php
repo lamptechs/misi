@@ -10,8 +10,6 @@ class PatientUpload extends Model
     use HasFactory;
     public $timestamps = false;
     public function patient(){
-        // return $this->hasOne(Patient_info::class);
         return $this->belongsTo(User::class, 'id');
-        // return $this->belongsTo('App\Patient_info');
     }
 }

@@ -34,7 +34,6 @@ class StateController extends Controller
             $request->all(),
             [
                 'name' => 'required|min:4',
-                'remarks' => 'nullable|min:4'
     
             ]
            );

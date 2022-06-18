@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class TherapistUpload extends Model
 {
     use HasFactory;
+    public $timestamps = false;
+    public function therapist(){
+        return $this->belongsTo(Therapist::class, 'id');
+    }
 }
