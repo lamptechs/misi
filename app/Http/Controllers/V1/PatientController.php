@@ -4,8 +4,8 @@ namespace App\Http\Controllers\V1;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Patient_info;
-use App\Patient_file_upload;
+use App\Models\User;
+use App\Models\PatientUpload;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -19,7 +19,7 @@ class PatientController extends Controller
      * Get Current Table Model
      */
     private function getModel(){
-        return new Patient_info();
+        return new User();
     }
 
     /**
@@ -29,18 +29,9 @@ class PatientController extends Controller
      */
     public function index()
     {
-        return Patient_info::all();
+        return User::all();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -50,12 +41,13 @@ class PatientController extends Controller
      */
     public function store(Request $request)
     {
+        try{
         $validator = Validator::make(
             $request->all(),
             [
                 'first_name' => 'required',
                 'last_name' => 'required',
-                'picture' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:10240',
+                // 'picture' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:10240',
                 // 'file' => 'required'
     
             ]
@@ -72,51 +64,51 @@ class PatientController extends Controller
             try{
 
                 DB::beginTransaction();
-            // if( $request->id == 0 ){
+            if( $request->id == 0 ){
                 $data = $this->getModel();
-                $data->create_by = 1;
-                $data->create_date = Carbon::Now();
+                $data->created_by = 1;
+                $data->created_at = Carbon::Now();
                 
-            //  }
+            }
             //else{
             //     $data = $this->getModel()->find($request->id);
             //     $data->modified_by = 1;
             // }
 
-            if($request->picture != null)
-            {
-                $id = uniqid(5);
-                $imageName = $id.'.'.$request->picture->extension();  
-                $image = $request->picture->move(public_path('upload'), $imageName);
-                $imageUrl = url('public/upload/' . $imageName);
-            }
+            // if($request->picture != null)
+            // {
+            //     $id = uniqid(5);
+            //     $imageName = $id.'.'.$request->picture->extension();  
+            //     $image = $request->picture->move(public_path('upload'), $imageName);
+            //     $imageUrl = url('public/upload/' . $imageName);
+            // }
 
-            $data->patient_first_name = $request->first_name;                  
-            $data->patient_last_name = $request->last_name;
-            $data->patient_picture_name = $imageName;            
-            $data->patient_picture_location = $imageUrl;            
-            $data->patient_email = $request->email;
-            $data->patient_phone = $request->phone;
-            $data->patient_alternet_phone = $request->alternet_phone ?? 0;
+            $data->state_id = $request->state_id;
+            $data->country_id = $request->country_id;
+            $data->blood_group_id = $request->blood_group_id;
+            $data->first_name = $request->first_name;                  
+            $data->last_name = $request->last_name;
+            // $data->patient_picture_name = $imageName;            
+            // $data->patient_picture_location = $imageUrl;            
+            $data->email = $request->email;
+            $data->phone = $request->phone;
+            $data->alternet_phone = $request->alternet_phone ?? 0;
             // $data->password = !empty($request->password) ? bcrypt($request->password) : $data->password;
-            $data->patient_address = $request->address;
-            $data->patient_area = $request->area;
-            $data->patient_city = $request->city;
-            $data->patient_country = $request->country;
+            $data->address = $request->address;
+            $data->area = $request->area;
+            $data->city = $request->city;
             $data->bsn_number = $request->bsn_number;
             $data->dob_number = $request->dob_number;
             $data->insurance_number = $request->insurance_number;
             $data->emergency_contact = $request->emergency_contact ?? 0;
             $data->age = $request->age;
-            $data->sex = $request->sex;
+            $data->gender = $request->gender;
             $data->marital_status = $request->marital_status;
             $data->medical_history = $request->medical_history;
-            $data->date_of_birth = $request->date_of_birth;
-            $data->blood_group = $request->blood_group;
+            $data->date_of_birth = Carbon::now();
             $data->occupation = $request->occupation;
-            $data->admin_remarks = $request->remarks ?? '';
-            $data->patient_password = bcrypt($request->password);
-            $data->status = $request->status;
+            $data->remarks = $request->remarks ?? '';
+            $data->password = bcrypt($request->password);
             $data->save();
             $this->saveFileInfo($request, $data);
             
@@ -132,7 +124,12 @@ class PatientController extends Controller
             catch(Exception $e){
                 DB::rollBack();
             }
-            return $data;
+            // $this->apiSuccess();
+            // // $this->data = (new ServiceCategoryResource($service));
+            // return $this->apiOutput();
+        }catch(Exception $e){
+            return $this->apiOutput($this->getError( $e), 500);
+        }
     }
    
 
@@ -143,9 +140,9 @@ class PatientController extends Controller
     public function saveFileInfo($request, $patient){
         $data = $patient->file_info;
         if(empty($data)){
-            $data = new Patient_file_upload();            
-            $data->create_by = 1;
-            $data->create_date = Carbon::Now();
+            $data = new PatientUpload();            
+            $data->created_by = 1;
+            $data->created_at = Carbon::Now();
         }
         // else{
         //     $data->updated_by = $request->updated_by;
@@ -153,7 +150,7 @@ class PatientController extends Controller
 
         if($request->file != null)
         {
-            $extension = $request->file->extension();
+            // $extension = $request->file->extension();
             $id = uniqid(5);
             $fileName = $id.'.'.$request->file->extension();  
             $file = $request->file->move(public_path('upload'), $fileName);
@@ -163,10 +160,10 @@ class PatientController extends Controller
 
         $data->patient_id = $patient->id;
         $data->file_name = $fileName;
-        $data->file_location = $fileUrl;
-        $data->file_type = $extension;
-        $data->file_remarks = $request->file_remarks ?? '';
+        $data->file_url = $fileUrl;
+        $data->file_type = $request->file_type;
         $data->status = $request->status;
+        $data->remarks = $request->remarks ?? '';
        
         $data->save();
        

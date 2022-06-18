@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\V1;
 
 use Illuminate\Http\Request;
-use App\Country;
+use App\Models\Country;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
+use Exception;
 
 class CountryController extends Controller
 {
@@ -20,15 +21,6 @@ class CountryController extends Controller
         return Country::all();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -38,6 +30,7 @@ class CountryController extends Controller
      */
     public function store(Request $request)
     {
+        try{
         $validator = Validator::make(
             $request->all(),
             [
@@ -47,21 +40,23 @@ class CountryController extends Controller
             ]
            );
             
-            if ($validator->fails()) {
-                return response()->json(
-                    [$validator->errors()],
-                    422
-                );
-            }
+           if ($validator->fails()) {
+    
+            $this->apiOutput($this->getValidationError($validator), 200);
+           }
    
             $country = new Country();
-            $country->country_name = $request->name;
+            $country->name = $request->name;
             $country->status = $request->status;
-            $country->remarks = $request->remarks ?? "";
-            $country->create_by = 1;
-            $country->create_date = Carbon::Now();
+            $country->created_by = 1;
+            $country->created_at = Carbon::Now();
             $country->save();
-            return $country;
+            $this->apiSuccess();
+            // $this->data = (new ServiceCategoryResource($service));
+            return $this->apiOutput();
+        }catch(Exception $e){
+            return $this->apiOutput($this->getError( $e), 500);
+        }
     }
 
     /**
@@ -75,16 +70,6 @@ class CountryController extends Controller
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
@@ -95,6 +80,7 @@ class CountryController extends Controller
      */
     public function update(Request $request, $id)
     {
+        try{
         $validator = Validator::make(
             $request->all(),
             [
@@ -112,13 +98,17 @@ class CountryController extends Controller
             }
    
             $country = Country::find($id);
-            $country->country_name = $request->name;
+            $country->name = $request->name;
             $country->status = $request->status;
-            $country->remarks = $request->remarks ?? "";
-            $country->modified_by = 1;
-            $country->modified_date = Carbon::Now();
+            $country->updated_by	 = 1;
+            $country->updated_at	 = Carbon::Now();
             $country->save();
-            return $country;
+            $this->apiSuccess();
+            // $this->data = (new ServiceCategoryResource($service));
+            return $this->apiOutput();
+        }catch(Exception $e){
+            return $this->apiOutput($this->getError( $e), 500);
+        }
     }
 
     /**
@@ -129,6 +119,8 @@ class CountryController extends Controller
      */
     public function destroy($id)
     {
-        return Country::destroy($id);
+        Country::destroy($id);
+        $this->apiSuccess();
+        return $this->apiOutput("Country Deleted Successfully", 200);
     }
 }

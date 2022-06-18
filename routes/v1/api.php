@@ -82,10 +82,10 @@ Route::post('/ticket_department/update/{id}', [TicketDepartmentController::class
 Route::post('/ticket_department/delete/{id}', [TicketDepartmentController::class, 'destroy']);
 
 //State/City
-Route::get('/state_city', [StateController::class, 'index']);
-Route::post('/state_city/store', [StateController::class, 'store']);
-Route::post('/state_city/update/{id}', [StateController::class, 'update']);
-Route::post('/state_city/delete/{id}', [StateController::class, 'destroy']);
+Route::get('/state', [StateController::class, 'index']);
+Route::post('/state/store', [StateController::class, 'store']);
+Route::post('/state/update/{id}', [StateController::class, 'update']);
+Route::post('/state/delete/{id}', [StateController::class, 'destroy']);
 
 //Country
 Route::get('/country', [CountryController::class, 'index']);

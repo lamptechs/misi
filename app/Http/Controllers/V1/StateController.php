@@ -4,9 +4,10 @@ namespace App\Http\Controllers\V1;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\State_city;
+use App\Models\State;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
+use Exception;
 
 class StateController extends Controller
 {
@@ -17,17 +18,7 @@ class StateController extends Controller
      */
     public function index()
     {
-          return State_city::all();
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+          return State::all();
     }
 
     /**
@@ -38,6 +29,7 @@ class StateController extends Controller
      */
     public function store(Request $request)
     {
+        try{
         $validator = Validator::make(
             $request->all(),
             [
@@ -47,45 +39,26 @@ class StateController extends Controller
             ]
            );
             
-            if ($validator->fails()) {
-                return response()->json(
-                    [$validator->errors()],
-                    422
-                );
-            }
+           if ($validator->fails()) {
+    
+            $this->apiOutput($this->getValidationError($validator), 200);
+           }
    
-            $state = new State_city();
-            $state->state_city_name = $request->name;
+            $state = new State();
+            $state->name = $request->name;
             $state->status = $request->status;
-            $state->remarks = $request->remarks ?? "";
-            $state->create_by = 1;
-            $state->create_date = Carbon::Now();
+            $state->created_by = 1;
+            $state->created_at = Carbon::Now();
             $state->save();
-            return $state;
+            $this->apiSuccess();
+            // $this->data = (new ServiceCategoryResource($service));
+            return $this->apiOutput();
+        }catch(Exception $e){
+            return $this->apiOutput($this->getError( $e), 500);
+        }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
+    
     /**
      * Update the specified resource in storage.
      *
@@ -95,30 +68,35 @@ class StateController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $validator = Validator::make(
-            $request->all(),
-            [
-                'name' => 'required|min:4',
-                'remarks' => 'nullable|min:4'
-    
-            ]
-           );
-            
-            if ($validator->fails()) {
-                return response()->json(
-                    [$validator->errors()],
-                    422
-                );
+        try{
+            $validator = Validator::make(
+                $request->all(),
+                [
+                    'name' => 'required|min:4',
+                    'remarks' => 'nullable|min:4'
+        
+                ]
+               );
+                
+                if ($validator->fails()) {
+                    return response()->json(
+                        [$validator->errors()],
+                        422
+                    );
+                }
+       
+                $state = State::find($id);
+                $state->name = $request->name;
+                $state->status = $request->status;
+                $state->updated_by = 1;
+                $state->updated_at = Carbon::Now();
+                $state->save();
+                $this->apiSuccess();
+                // $this->data = (new ServiceCategoryResource($service));
+                return $this->apiOutput();
+            }catch(Exception $e){
+                return $this->apiOutput($this->getError( $e), 500);
             }
-   
-            $state = State_city::find($id);
-            $state->state_city_name = $request->name;
-            $state->status = $request->status;
-            $state->remarks = $request->remarks ?? "";
-            $state->modified_by = 1;
-            $state->modified_date = Carbon::Now();
-            $state->save();
-            return $state;
     }
 
     /**
@@ -129,6 +107,8 @@ class StateController extends Controller
      */
     public function destroy($id)
     {
-        return State_city::destroy($id);
+        State::destroy($id);
+        $this->apiSuccess();
+        return $this->apiOutput("State Deleted Successfully", 200);
     }
 }
