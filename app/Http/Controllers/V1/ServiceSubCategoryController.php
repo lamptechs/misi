@@ -18,7 +18,27 @@ class ServiceSubCategoryController extends Controller
      */
     public function index()
     {
-        return ServiceSubCategory::all();
+        $subs = ServiceSubCategory::all();
+        foreach($subs as $sub){
+            if($sub->status == 1){
+                $status = 'Active';
+            }
+            if($sub->status == 0){
+                $status = 'Inactive';
+            }
+        $params =[
+            "Service Category Name" => $sub->category->name,
+            "Name" => $sub->name,
+            "Status" => $status,
+            "Remarks" => $sub->remarks,
+            "Created By" => $sub->created_by,
+            "Updated By" => $sub->updated_by,
+            "Created At" => $sub->created_at,
+            "Updated At" => $sub->updated_at
+
+        ];
+    }
+        return $params;
     }
 
     /**
