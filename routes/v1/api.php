@@ -12,6 +12,7 @@ use App\Http\Controllers\V1\ServiceSubCategoryController;
 use App\Http\Controllers\V1\StateController;
 use App\Http\Controllers\V1\TherapistTypeController;
 use App\Http\Controllers\V1\TicketDepartmentController;
+use App\Http\Controllers\V1\TicketController;
 use App\Http\Controllers\V1\DegreeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -50,12 +51,12 @@ Route::post('/therapistService/delete/{id}', [TherapistServiceController::class,
 Route::get('/therapist', [TherapistController::class, 'index']);
 Route::post('/therapist/store', [TherapistController::class, 'store']);
 Route::post('/therapist/update/{id}', [TherapistController::class, 'update']);
-Route::post('/therapist/delete/{id}', [TherapistController::class, 'destroy']);
+Route::post('/therapist/delete/{id}', [TherapistController::class, 'destroy'])->withTrashed();
 
 //Patient Create
 Route::get('/patient', [PatientController::class, 'index']);
 Route::post('/patient/store', [PatientController::class, 'store']);
-Route::post('/patient/update/{id}', [PatientController::class, 'update']);
+Route::post('/patient/update/{id}', [PatientController::class, 'store']);
 Route::post('/patient/delete/{id}', [PatientController::class, 'destroy']);
 
 //Occupation
@@ -81,6 +82,12 @@ Route::get('/ticket_department', [TicketDepartmentController::class, 'index']);
 Route::post('/ticket_department/store', [TicketDepartmentController::class, 'store']);
 Route::post('/ticket_department/update/{id}', [TicketDepartmentController::class, 'update']);
 Route::post('/ticket_department/delete/{id}', [TicketDepartmentController::class, 'destroy']);
+
+//Ticket
+Route::get('/ticket', [TicketController::class, 'index']);
+Route::post('/ticket/store', [TicketController::class, 'store']);
+Route::post('/ticket/update/{id}', [TicketController::class, 'update']);
+Route::post('/ticket/delete/{id}', [TicketController::class, 'destroy']);
 
 //State
 Route::get('/state', [StateController::class, 'index']);

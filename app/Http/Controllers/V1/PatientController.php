@@ -86,6 +86,7 @@ class PatientController extends Controller
             $data->state_id = $request->state_id;
             $data->country_id = $request->country_id;
             $data->blood_group_id = $request->blood_group_id;
+            $data->source = $request->source;
             $data->first_name = $request->first_name;                  
             $data->last_name = $request->last_name;
             // $data->patient_picture_name = $imageName;            
@@ -109,6 +110,7 @@ class PatientController extends Controller
             $data->occupation = $request->occupation;
             $data->remarks = $request->remarks ?? '';
             $data->password = bcrypt($request->password);
+            $data->image_url = $this->addImage($request->picture);
             $data->save();
             $this->saveFileInfo($request, $data);
             
@@ -122,12 +124,14 @@ class PatientController extends Controller
                     }
             }
             catch(Exception $e){
+                return $this->apiOutput($this->getError( $e), 500);
                 DB::rollBack();
             }
             // $this->apiSuccess();
             // // $this->data = (new ServiceCategoryResource($service));
             // return $this->apiOutput();
         }catch(Exception $e){
+            
             return $this->apiOutput($this->getError( $e), 500);
         }
     }
@@ -211,6 +215,14 @@ class PatientController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try{
+            $data = $this->getModel()->find($id);
+            $data->delete();
+            $this->apiSuccess();
+            return $this->apiOutput("Patient Deleted Successfully", 200);
+        }catch(Exception $e){
+            return $this->apiOutput($this->getError( $e), 500);
+        }
+        
     }
 }

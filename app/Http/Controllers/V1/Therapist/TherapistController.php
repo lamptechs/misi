@@ -119,9 +119,11 @@ class TherapistController extends Controller
                     }
             }
             catch(Exception $e){
+                
+                return $this->apiOutput($this->getError( $e), 500);
                 DB::rollBack();
             }
-            return $data;
+            
     }
 
     // Save File Info
@@ -195,6 +197,14 @@ class TherapistController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try{
+            $data = $this->getModel()->withTrashed()->find($id);
+            $data->forceDelete();
+            // Therapist::destroy($id);
+            $this->apiSuccess();
+            return $this->apiOutput("Therapist Deleted Successfully", 200);
+        }catch(Exception $e){
+            return $this->apiOutput($this->getError( $e), 500);
+        }
     }
 }
