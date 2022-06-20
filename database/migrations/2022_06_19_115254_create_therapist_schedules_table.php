@@ -13,13 +13,17 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('therapist_services', function (Blueprint $table) {
+        Schema::create('therapist_schedules', function (Blueprint $table) {
             $table->id();
-            $table->foreignId("therapist_id")->nullable()->references("id")->on('therapists');
-            $table->string("name");
-            $table->boolean("status");
-            $table->foreignId("service_category_id")->nullable()->references("id")->on('service_categories');
-            $table->foreignId("service_sub_category_id")->nullable()->references("id")->on('service_sub_categories');
+            $table->foreignId("therapist_id")->nullable()->references("id")->on("therapists");
+            $table->string('schedule_day')->nullable();
+            $table->date('start_date');
+            $table->date('end_date');
+            $table->time('start_time');
+            $table->time('end_time');
+            $table->string('consulting_time');
+            $table->string('remarks')->nullable();
+            $table->boolean('status');
             $table->unsignedBigInteger("created_by")->nullable();
             $table->unsignedBigInteger("updated_by")->nullable();
             $table->timestamps();
@@ -34,6 +38,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('therapist_services');
+        Schema::dropIfExists('therapist_schedules');
     }
 };

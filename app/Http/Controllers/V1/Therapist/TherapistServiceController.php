@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Therapist\V1;
+namespace App\Http\Controllers\V1\Therapist;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Therapist_Service;
+use App\Models\TherapistService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
+use Exception;
 
 class TherapistServiceController extends Controller
 {
@@ -17,7 +18,7 @@ class TherapistServiceController extends Controller
      */
     public function index()
     {
-        return Therapist_Service::all();
+        return TherapistService::all();
     }
 
     /**
@@ -38,32 +39,35 @@ class TherapistServiceController extends Controller
      */
     public function store(Request $request)
     {
+        try{
         $validator = Validator::make(
             $request->all(),
             [
                 'name' => 'required|min:4',
-                'remarks' => 'nullable|min:4'
     
             ]
            );
             
-            if ($validator->fails()) {
-                return response()->json(
-                    [$validator->errors()],
-                    422
-                );
-            }
+           if ($validator->fails()) {
+    
+            $this->apiOutput($this->getValidationError($validator), 200);
+           }
    
-            $therapistservice = new Therapist_Service();
-            $therapistservice->therapist_service_name = $request->name;
+            $therapistservice = new TherapistService();
+            $therapistservice->therapist_id  = $request->therapist_id ;
+            $therapistservice->name = $request->name;
             $therapistservice->status = $request->status;
-            $therapistservice->remarks = $request->remarks ?? "";
-            $therapistservice->create_by = 1;
-            $therapistservice->create_date = Carbon::Now();
-            $therapistservice->service_category_id = $request->service_category_id;
-            $therapistservice->service_subcategory_id = $request->service_subcategory_id;
+            $therapistservice->service_category_id  = $request->service_category_id ;
+            $therapistservice->service_sub_category_id  = $request->service_sub_category_id ;
+            $therapistservice->created_by = 1;
+            $therapistservice->created_at = Carbon::Now();
             $therapistservice->save();
-            return $therapistservice;
+            $this->apiSuccess();
+            // $this->data = (new BloodGroupResource($blood_group));
+            return $this->apiOutput();
+        }catch(Exception $e){
+            return $this->apiOutput($this->getError( $e), 500);
+        }
     }
 
     /**
@@ -97,6 +101,7 @@ class TherapistServiceController extends Controller
      */
     public function update(Request $request, $id)
     {
+        try{
         $validator = Validator::make(
             $request->all(),
             [
@@ -113,16 +118,20 @@ class TherapistServiceController extends Controller
                 );
             }
    
-            $therapistservice = Therapist_Service::find($id);
-            $therapistservice->therapist_service_name = $request->name;
+            $therapistservice = TherapistService::find($id);
+            $therapistservice->name = $request->name;
             $therapistservice->status = $request->status;
-            $therapistservice->remarks = $request->remarks ?? "";
-            $therapistservice->modified_by = 1;
-            $therapistservice->modified_date = Carbon::Now();
-            $therapistservice->service_category_id = $request->service_category_id;
-            $therapistservice->service_subcategory_id = $request->service_subcategory_id;
+            $therapistservice->service_category_id  = $request->service_category_id ;
+            $therapistservice->service_sub_category_id  = $request->service_sub_category_id ;
+            $therapistservice->updated_by = 1;
+            $therapistservice->updated_at = Carbon::Now();
             $therapistservice->save();
-            return $therapistservice;
+            $this->apiSuccess();
+            // $this->data = (new BloodGroupResource($blood_group));
+            return $this->apiOutput();
+        }catch(Exception $e){
+            return $this->apiOutput($this->getError( $e), 500);
+        }
     }
 
     /**
@@ -133,6 +142,8 @@ class TherapistServiceController extends Controller
      */
     public function destroy($id)
     {
-        return Therapist_Service::destroy($id);
+        TherapistService::destroy($id);
+        $this->apiSuccess();
+        return $this->apiOutput("Therapist Service Deleted Successfully", 200);
     }
 }

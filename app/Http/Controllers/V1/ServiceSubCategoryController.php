@@ -5,9 +5,11 @@ namespace App\Http\Controllers\V1;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\ServiceSubCategory;
+use App\Models\ServiceCategory;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\ServiceSubCategoryResource;
+use Illuminate\Support\Facades\DB;
 
 class ServiceSubCategoryController extends Controller
 {
@@ -18,7 +20,46 @@ class ServiceSubCategoryController extends Controller
      */
     public function index()
     {
-        return ServiceSubCategory::all();
+        $subs = ServiceSubCategory::all();
+
+        // $sub = ServiceSubCategory::select('service_sub_categories.*')->
+        // whereHas('service_categories','service_categories.id','=','service_sub_categories_id')->get('service_categories.name');
+        // $subs = DB::table('service_sub_categories')
+        //     ->join('service_categories', 'service_sub_categories.service_categorie_id', '=', 'service_categories.id')
+        //     ->select('service_sub_categories.*','service_categories.name')
+        //     ->get();
+       
+        // echo $subs;
+        // $subs = $sub;
+        // foreach($subs as $sub){
+        //     if($sub->status == 1){
+        //         $status = 'Active';
+        //     }
+        //     if($sub->status == 0){
+        //         $status = 'Inactive';
+        //     }
+        //      $params = array(
+        //         "ID" => $sub->id,
+        //         "Service Category Name" => $sub->category->name,
+        //         "Name" => $sub->name,
+        //         "Status" => $status,
+        //         "Remarks" => $sub->remarks,
+        //         "Created By" => $sub->created_by,
+        //         "Updated By" => $sub->updated_by,
+        //         "Created At" => $sub->created_at,
+        //         "Updated At" => $sub->updated_at
+    
+        //     );
+            
+        //     return $params;
+        // }
+        
+        return $subs;
+        
+        
+    
+    
+       
     }
 
     /**

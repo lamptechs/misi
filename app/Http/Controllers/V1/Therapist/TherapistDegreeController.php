@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Therapist;
+namespace App\Http\Controllers\V1\Therapist;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Controller\V1;
-use App\Therapist_degree;
+use App\Models\TherapistDegree;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
+use Exception;
 
 class TherapistDegreeController extends Controller
 {
@@ -18,18 +19,9 @@ class TherapistDegreeController extends Controller
      */
     public function index()
     {
-        return Therapist_degree::all();
+        return TherapistDegree::all();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -39,6 +31,8 @@ class TherapistDegreeController extends Controller
      */
     public function store(Request $request)
     {
+
+        try{
         $validator = Validator::make(
             $request->all(),
             [
@@ -48,21 +42,23 @@ class TherapistDegreeController extends Controller
             ]
            );
             
-            if ($validator->fails()) {
-                return response()->json(
-                    [$validator->errors()],
-                    422
-                );
-            }
+           if ($validator->fails()) {
+    
+            $this->apiOutput($this->getValidationError($validator), 200);
+           }
    
-            $degree = new Therapist_degree();
-            $degree->degree_name = $request->name;
-            $degree->status = $request->status;
-            $degree->remarks = $request->remarks ?? "";
-            $degree->create_by = 1;
-            $degree->create_date = Carbon::Now();
+            $degree = new TherapistDegree();
+            $degree->therapist_id = $request->therapist_id;
+            $degree->degree_id = $request->degree_id;
+            $degree->created_by = 1;
+            $degree->created_at = Carbon::Now();
             $degree->save();
-            return $degree;
+            $this->apiSuccess();
+            // $this->data = (new ServiceCategoryResource($service));
+            return $this->apiOutput();
+        }catch(Exception $e){
+            return $this->apiOutput($this->getError( $e), 500);
+        }
     }
 
     /**
@@ -96,6 +92,7 @@ class TherapistDegreeController extends Controller
      */
     public function update(Request $request, $id)
     {
+        try{
         $validator = Validator::make(
             $request->all(),
             [
@@ -112,14 +109,18 @@ class TherapistDegreeController extends Controller
                 );
             }
    
-            $degree = Therapist_degree::find($id);
-            $degree->degree_name = $request->name;
-            $degree->status = $request->status;
-            $degree->remarks = $request->remarks ?? "";
-            $degree->modified_by = 1;
-            $degree->modified_date = Carbon::Now();
+            $degree = TherapistDegree::find($id);
+            $degree->therapist_id = $request->therapist_id;
+            $degree->degree_id = $request->degree_id;
+            $degree->updated_by = 1;
+            $degree->updated_at = Carbon::Now();
             $degree->save();
-            return $degree;
+            $this->apiSuccess();
+            // $this->data = (new ServiceCategoryResource($service));
+            return $this->apiOutput();
+        }catch(Exception $e){
+            return $this->apiOutput($this->getError( $e), 500);
+        }
     }
 
     /**
@@ -130,6 +131,8 @@ class TherapistDegreeController extends Controller
      */
     public function destroy($id)
     {
-        return Therapist_degree::destroy($id);
+        TherapistDegree::destroy($id);
+        $this->apiSuccess();
+        return $this->apiOutput("Therapist Degree Deleted Successfully", 200);
     }
 }

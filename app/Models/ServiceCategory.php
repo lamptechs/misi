@@ -9,4 +9,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class ServiceCategory extends Model
 {
     use HasFactory, SoftDeletes;
+    
+    public function subcategory(){
+        return $this->hasMany(ServiceSubCategory::class,'service_categorie_id');
+    }
+
 }

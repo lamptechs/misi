@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Therapist;
+namespace App\Http\Controllers\V1\Therapist;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Controller\V1;
 use Illuminate\Http\Request;
-use App\Therapist_info;
-use App\Therapist_file_upload;
+use App\Models\Therapist;
+use App\Models\TherapistUpload;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -16,13 +15,19 @@ use Exception;
 class TherapistController extends Controller
 {
     /**
+     * Get Current Table Model
+     */
+    private function getModel(){
+        return new Therapist();
+    }
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        return Therapist_info::all();
+        return Therapist::all();
     }
 
     /**
@@ -48,7 +53,6 @@ class TherapistController extends Controller
             [
                 'first_name' => 'required',
                 'last_name' => 'required',
-                'picture' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:10240',
                 // 'file' => 'required'
     
             ]
@@ -65,12 +69,12 @@ class TherapistController extends Controller
             try{
 
                 DB::beginTransaction();
-            // if( $request->id == 0 ){
+            if( $request->id == 0 ){
                 $data = $this->getModel();
-                $data->create_by = 1;
-                $data->create_date = Carbon::Now();
+                $data->created_by = 1;
+                $data->created_at = Carbon::Now();
                 
-            //  }
+             }
             //else{
             //     $data = $this->getModel()->find($request->id);
             //     $data->modified_by = 1;
@@ -84,27 +88,26 @@ class TherapistController extends Controller
             //     $imageUrl = url('public/upload/' . $imageName);
             // }
 
-            $data->therapist_first_name = $request->first_name;                  
-            $data->therapist_last_name = $request->last_name;         
-            $data->therapist_email = $request->email;
-            $data->therapist_phone = $request->phone;
-            $data->residential_address = $request->address;
-            $data->language_preference = $request->language;
+            $data->first_name = $request->first_name;                  
+            $data->last_name = $request->last_name;         
+            $data->email = $request->email;
+            $data->phone = $request->phone;
+            $data->address = $request->address;
+            $data->language = $request->language;
             $data->bsn_number = $request->bsn_number;
             $data->dob_number = $request->dob_number;
             $data->insurance_number = $request->insurance_number;
             $data->emergency_contact = $request->emergency_contact ?? 0;
             $data->gender = $request->gender;
-            $data->date_of_birth = $request->date_of_birth;
+            $data->date_of_birth = /*$request->date_of_birth*/ Carbon::now();
+            $data->status = $request->status;
             $data->therapist_type_id = $request->therapist_type_id;
             $data->blood_group_id = $request->blood_group_id;
-            $data->state_city_id = $request->state_city_id;
+            $data->state_id = $request->state_id;
             $data->country_id = $request->country_id;
-            $data->therapist_degree_id = $request->therapist_degree_id;
-            $data->remarks = $request->remarks ?? '';
-            $data->status = $request->status;
+            
             $data->save();
-            // $this->saveFileInfo($request, $data);
+            $this->saveFileInfo($request, $data);
             
             DB::commit();
                     try{
@@ -116,18 +119,19 @@ class TherapistController extends Controller
                     }
             }
             catch(Exception $e){
+                
+                return $this->apiOutput($this->getError( $e), 500);
                 DB::rollBack();
             }
-            return $data;
+            
     }
 
     // Save File Info
     public function saveFileInfo($request, $therapist){
         $data = $therapist->file_info;
         if(empty($data)){
-            $data = new Therapist_file_upload();            
-            $data->create_by = 1;
-            $data->create_date = Carbon::Now();
+            $data = new TherapistUpload();            
+            $data->created_at = Carbon::Now();
         }
         // else{
         //     $data->updated_by = $request->updated_by;
@@ -135,7 +139,7 @@ class TherapistController extends Controller
 
         if($request->file != null)
         {
-            $extension = $request->file->extension();
+            // $extension = $request->file->extension();
             $id = uniqid(5);
             $fileName = $id.'.'.$request->file->extension();  
             $file = $request->file->move(public_path('upload'), $fileName);
@@ -143,13 +147,10 @@ class TherapistController extends Controller
         }
 
 
-        $data->patient_id = $therapist->id;
+        $data->therapist_id  = $therapist->id;
         $data->file_name = $fileName;
-        $data->file_location = $fileUrl;
-        $data->file_type = $extension;
-        $data->file_remarks = $request->file_remarks ?? '';
-        $data->status = $request->status;
-       
+        $data->file_url = $fileUrl;
+
         $data->save();
        
     }
@@ -196,6 +197,14 @@ class TherapistController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try{
+            $data = $this->getModel()->withTrashed()->find($id);
+            $data->forceDelete();
+            // Therapist::destroy($id);
+            $this->apiSuccess();
+            return $this->apiOutput("Therapist Deleted Successfully", 200);
+        }catch(Exception $e){
+            return $this->apiOutput($this->getError( $e), 500);
+        }
     }
 }

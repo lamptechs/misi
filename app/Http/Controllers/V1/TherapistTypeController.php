@@ -4,9 +4,10 @@ namespace App\Http\Controllers\V1;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Therapist_type;
+use App\Models\TherapistType;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
+use Exception;
 
 class TherapistTypeController extends Controller
 {
@@ -17,18 +18,9 @@ class TherapistTypeController extends Controller
      */
     public function index()
     {
-        return Therapist_type::all();
+        return TherapistType::all();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -38,6 +30,7 @@ class TherapistTypeController extends Controller
      */
     public function store(Request $request)
     {
+        try{
         $validator = Validator::make(
             $request->all(),
             [
@@ -47,32 +40,23 @@ class TherapistTypeController extends Controller
             ]
            );
             
-            if ($validator->fails()) {
-                return response()->json(
-                    [$validator->errors()],
-                    422
-                );
-            }
+           if ($validator->fails()) {
+    
+            $this->apiOutput($this->getValidationError($validator), 200);
+           }
    
-            $therapist_type = new Therapist_type();
-            $therapist_type->therapist_type_name = $request->name;
+            $therapist_type = new TherapistType();
+            $therapist_type->name = $request->name;
             $therapist_type->status = $request->status;
-            $therapist_type->remarks = $request->remarks ?? "";
-            $therapist_type->create_by = 1;
-            $therapist_type->create_date = Carbon::Now();
+            $therapist_type->created_by = 1;
+            $therapist_type->created_at = Carbon::Now();
             $therapist_type->save();
-            return $therapist_type;
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
+            $this->apiSuccess();
+            // $this->data = (new ServiceCategoryResource($service));
+            return $this->apiOutput();
+        }catch(Exception $e){
+            return $this->apiOutput($this->getError( $e), 500);
+        }
     }
 
     /**
@@ -95,6 +79,7 @@ class TherapistTypeController extends Controller
      */
     public function update(Request $request, $id)
     {
+        try{
         $validator = Validator::make(
             $request->all(),
             [
@@ -104,21 +89,24 @@ class TherapistTypeController extends Controller
             ]
            );
             
-            if ($validator->fails()) {
-                return response()->json(
-                    [$validator->errors()],
-                    422
-                );
-            }
+           if ($validator->fails()) {
+    
+            $this->apiOutput($this->getValidationError($validator), 200);
+           }
    
-            $therapist_type = Therapist_type::find($id);
-            $therapist_type->therapist_type_name = $request->name;
+            $therapist_type = TherapistType::find($id);
+            $therapist_type->name = $request->name;
             $therapist_type->status = $request->status;
-            $therapist_type->remarks = $request->remarks ?? "";
-            $therapist_type->modified_by = 1;
-            $therapist_type->modified_date = Carbon::Now();
+            $therapist_type->updated_by = 1;
+            $therapist_type->updated_at = Carbon::Now();
             $therapist_type->save();
-            return $therapist_type;
+            $this->apiSuccess();
+            // $this->data = (new ServiceCategoryResource($service));
+            return $this->apiOutput();
+        }
+        catch(Exception $e){
+            return $this->apiOutput($this->getError( $e), 500);
+        }
     }
 
     /**
@@ -129,6 +117,8 @@ class TherapistTypeController extends Controller
      */
     public function destroy($id)
     {
-        return Therapist_type::destroy($id);
+        TherapistType::destroy($id);
+        $this->apiSuccess();
+        return $this->apiOutput("Therapist Type Deleted Successfully", 200);
     }
 }

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Country extends Model
 {
     use HasFactory;
+    public $timestamps =false; 
 
     public function createdBy(){
         return $this->belongsTo(Admin::class, "created_by")->withTrashed();

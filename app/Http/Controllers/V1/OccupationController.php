@@ -4,10 +4,10 @@ namespace App\Http\Controllers\V1;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Occupation;
+use App\Models\Ocupation;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
-
+use Exception;
 
 class OccupationController extends Controller
 {
@@ -18,18 +18,9 @@ class OccupationController extends Controller
      */
     public function index()
     {
-        return Occupation::all();
+        return Ocupation::all();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -39,6 +30,7 @@ class OccupationController extends Controller
      */
     public function store(Request $request)
     {
+        try{
         $validator = Validator::make(
             $request->all(),
             [
@@ -48,21 +40,23 @@ class OccupationController extends Controller
             ]
            );
             
-            if ($validator->fails()) {
-                return response()->json(
-                    [$validator->errors()],
-                    422
-                );
-            }
+           if ($validator->fails()) {
+    
+            $this->apiOutput($this->getValidationError($validator), 200);
+           }
    
-            $occupation = new Occupation();
-            $occupation->occupation_name = $request->name;
+            $occupation = new Ocupation();
+            $occupation->name = $request->name;
             $occupation->status = $request->status;
-            $occupation->remarks = $request->remarks ?? "";
-            $occupation->create_by = 1;
-            $occupation->create_date = Carbon::Now();
+            $occupation->created_by = 1;
+            $occupation->created_at = Carbon::Now();
             $occupation->save();
-            return $occupation;
+            $this->apiSuccess();
+            // $this->data = (new ServiceCategoryResource($service));
+            return $this->apiOutput();
+        }catch(Exception $e){
+            return $this->apiOutput($this->getError( $e), 500);
+        }
     }
 
     /**
@@ -96,32 +90,32 @@ class OccupationController extends Controller
      */
     public function update(Request $request, $id)
     {
+        try{
         $validator = Validator::make(
             $request->all(),
             [
                 'name' => 'required|min:4',
-                'remarks' => 'nullable|min:4'
     
             ]
            );
             
-            if ($validator->fails()) {
-                return response()->json(
-                    [$validator->errors()],
-                    422
-                );
-            }
+           if ($validator->fails()) {
+    
+            $this->apiOutput($this->getValidationError($validator), 200);
+           }
    
-            $occupation = Occupation::find($id);
-            $occupation->occupation_name = $request->name;
+            $occupation = Ocupation::find($id);
+            $occupation->name = $request->name;
             $occupation->status = $request->status;
-            $occupation->remarks = $request->remarks ?? "";
-           //  $occupation->create_by = 1;
-           //  $occupation->create_date = Carbon::Now();
-            $occupation->modified_by = 1;
-            $occupation->modified_date = Carbon::Now();
+            $occupation->updated_by = 1;
+            $occupation->updated_at = Carbon::Now();
             $occupation->save();
-            return $occupation;
+            $this->apiSuccess();
+            // $this->data = (new ServiceCategoryResource($service));
+            return $this->apiOutput();
+        }catch(Exception $e){
+            return $this->apiOutput($this->getError( $e), 500);
+        }
     }
 
     /**
@@ -132,6 +126,8 @@ class OccupationController extends Controller
      */
     public function destroy($id)
     {
-        return Occupation::destroy($id);
+        Ocupation::destroy($id);
+        $this->apiSuccess();
+        return $this->apiOutput("Occupation Deleted Successfully", 200);
     }
 }

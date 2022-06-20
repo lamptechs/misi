@@ -15,6 +15,7 @@ trait Upload{
      * Define Directories
      */
     protected  $advisor_image = "storage/uploads/advisor/";
+    protected  $patient_image = "storage/uploads/patient/";
     protected  $admin_profile = "storage/uploads/admin/profile";
     protected  $logo_dir = "storage/uploads/logo";
     protected  $others_dir = "storage/uploads/others";
@@ -90,7 +91,15 @@ trait Upload{
         return $path;
     }
 
+    // Upload Image
+    protected function addImage($request){
+                $id = uniqid(5);
+                $imageName = $id.'.'.$request->extension();  
+                $image = $request->move(public_path('upload'), $imageName);
+                $imageUrl = url('public/upload/' . $imageName);
+                return $imageUrl;
 
+    }
 
     
     /*

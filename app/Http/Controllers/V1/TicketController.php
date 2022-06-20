@@ -4,12 +4,13 @@ namespace App\Http\Controllers\V1;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\TicketDepartment;
-use Carbon\Carbon;
+use App\Models\Ticket;
+Use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Exception;
 
-class TicketDepartmentController extends Controller
+
+class TicketController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,7 +19,7 @@ class TicketDepartmentController extends Controller
      */
     public function index()
     {
-        return TicketDepartment::all();
+        return Ticket::all();
     }
 
 
@@ -31,9 +32,9 @@ class TicketDepartmentController extends Controller
     public function store(Request $request)
     {
         try{
-        $validator = Validator::make( $request->all(),[
-                'name' => 'required|min:4',
-                'remarks' => 'nullable|min:4'    
+           $validator = Validator::make( $request->all(),[
+                'patient_id' => 'required',
+                'therapist_id' => 'required'    
             ]);
             
             if ($validator->fails()) {
@@ -41,13 +42,21 @@ class TicketDepartmentController extends Controller
                 $this->apiOutput($this->getValidationError($validator), 200);
             }
    
-            $ticket_department = new TicketDepartment();
-            $ticket_department->name = $request->name;
-            $ticket_department->status = $request->status;
-            $ticket_department->remarks = $request->remarks ?? "";
-            $ticket_department->created_by = 1;
-            $ticket_department->created_at = Carbon::Now();
-            $ticket_department->save();
+            $ticket = new Ticket();
+            $ticket->patient_id = $request->patient_id;
+            $ticket->therapist_id = $request->therapist_id;
+            $ticket->ticket_department_id = $request->ticket_department_id;
+            $ticket->location = $request->location;
+            $ticket->language = $request->language;
+            $ticket->date = /*$request->date*/ Carbon::now();
+            $ticket->strike = $request->strike;
+            $ticket->strike_history = $request->strike_history ?? "";
+            $ticket->ticket_history = $request->ticket_history ?? "";
+            $ticket->remarks = $request->remarks ?? "";
+            $ticket->status = $request->status;
+            $ticket->created_by = 1;
+            $ticket->created_at = Carbon::Now();
+            $ticket->save();
             $this->apiSuccess();
             // $this->data = (new ServiceCategoryResource($service));
             return $this->apiOutput();
@@ -91,8 +100,8 @@ class TicketDepartmentController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'name' => 'required|min:4',
-                'remarks' => 'nullable|min:4'
+                'patient_id' => 'required',
+                'therapist_id' => 'required' 
     
             ]
            );
@@ -102,13 +111,21 @@ class TicketDepartmentController extends Controller
             $this->apiOutput($this->getValidationError($validator), 200);
            }
    
-            $ticket_department = TicketDepartment::find($id);
-            $ticket_department->name = $request->name;
-            $ticket_department->status = $request->status;
-            $ticket_department->remarks = $request->remarks ?? "";
-            $ticket_department->updated_by = 1;
-            $ticket_department->updated_at = Carbon::Now();
-            $ticket_department->save();
+            $ticket = TicketDepartment::find($id);
+            $ticket->patient_id = $request->patient_id;
+            $ticket->therapist_id = $request->therapist_id;
+            $ticket->ticket_department_id = $request->ticket_department_id;
+            $ticket->location = $request->location;
+            $ticket->language = $request->language;
+            $ticket->date = /*$request->date*/ Carbon::now();
+            $ticket->strike = $request->strike;
+            $ticket->strike_history = $request->strike_history ?? "";
+            $ticket->ticket_history = $request->ticket_history ?? "";
+            $ticket->remarks = $request->remarks ?? "";
+            $ticket->status = $request->status;
+            $ticket->updated_by = 1;
+            $ticket->updated_at = Carbon::Now();
+            $ticket->save();
             $this->apiSuccess();
             // $this->data = (new ServiceCategoryResource($service));
             return $this->apiOutput();
@@ -125,8 +142,8 @@ class TicketDepartmentController extends Controller
      */
     public function destroy($id)
     {
-        TicketDepartment::destroy($id);
+        Ticket::destroy($id);
         $this->apiSuccess();
-        return $this->apiOutput("Ticket Department Deleted Successfully", 200);
+        return $this->apiOutput("Ticket Deleted Successfully", 200);
     }
 }

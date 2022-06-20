@@ -1,8 +1,8 @@
 <?php
 
-use App\Http\Controllers\Therapist\TherapistController;
-use App\Http\Controllers\Therapist\TherapistDegreeController;
-use App\Http\Controllers\Therapist\TherapistServiceController;
+use App\Http\Controllers\V1\Therapist\TherapistController;
+use App\Http\Controllers\V1\Therapist\TherapistDegreeController;
+use App\Http\Controllers\V1\Therapist\TherapistServiceController;
 use App\Http\Controllers\V1\BloodGroupController;
 use App\Http\Controllers\V1\CountryController;
 use App\Http\Controllers\V1\OccupationController;
@@ -12,6 +12,8 @@ use App\Http\Controllers\V1\ServiceSubCategoryController;
 use App\Http\Controllers\V1\StateController;
 use App\Http\Controllers\V1\TherapistTypeController;
 use App\Http\Controllers\V1\TicketDepartmentController;
+use App\Http\Controllers\V1\TicketController;
+use App\Http\Controllers\V1\DegreeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -49,12 +51,12 @@ Route::post('/therapistService/delete/{id}', [TherapistServiceController::class,
 Route::get('/therapist', [TherapistController::class, 'index']);
 Route::post('/therapist/store', [TherapistController::class, 'store']);
 Route::post('/therapist/update/{id}', [TherapistController::class, 'update']);
-Route::post('/therapist/delete/{id}', [TherapistController::class, 'destroy']);
+Route::post('/therapist/delete/{id}', [TherapistController::class, 'destroy'])->withTrashed();
 
 //Patient Create
 Route::get('/patient', [PatientController::class, 'index']);
 Route::post('/patient/store', [PatientController::class, 'store']);
-Route::post('/patient/update/{id}', [PatientController::class, 'update']);
+Route::post('/patient/update/{id}', [PatientController::class, 'store']);
 Route::post('/patient/delete/{id}', [PatientController::class, 'destroy']);
 
 //Occupation
@@ -81,11 +83,17 @@ Route::post('/ticket_department/store', [TicketDepartmentController::class, 'sto
 Route::post('/ticket_department/update/{id}', [TicketDepartmentController::class, 'update']);
 Route::post('/ticket_department/delete/{id}', [TicketDepartmentController::class, 'destroy']);
 
-//State/City
-Route::get('/state_city', [StateController::class, 'index']);
-Route::post('/state_city/store', [StateController::class, 'store']);
-Route::post('/state_city/update/{id}', [StateController::class, 'update']);
-Route::post('/state_city/delete/{id}', [StateController::class, 'destroy']);
+//Ticket
+Route::get('/ticket', [TicketController::class, 'index']);
+Route::post('/ticket/store', [TicketController::class, 'store']);
+Route::post('/ticket/update/{id}', [TicketController::class, 'update']);
+Route::post('/ticket/delete/{id}', [TicketController::class, 'destroy']);
+
+//State
+Route::get('/state', [StateController::class, 'index']);
+Route::post('/state/store', [StateController::class, 'store']);
+Route::post('/state/update/{id}', [StateController::class, 'update']);
+Route::post('/state/delete/{id}', [StateController::class, 'destroy']);
 
 //Country
 Route::get('/country', [CountryController::class, 'index']);
@@ -93,8 +101,14 @@ Route::post('/country/store', [CountryController::class, 'store']);
 Route::post('/country/update/{id}', [CountryController::class, 'update']);
 Route::post('/country/delete/{id}', [CountryController::class, 'destroy']);
 
+//Degree
+Route::get('/degree', [DegreeController::class, 'index']);
+Route::post('/degree/store', [DegreeController::class, 'store']);
+Route::post('/degree/update/{id}', [DegreeController::class, 'update']);
+Route::post('/degree/delete/{id}', [DegreeController::class, 'destroy']);
+
 //Therapist Degree
-Route::get('/degree', [TherapistDegreeController::class, 'index']);
-Route::post('/degree/store', [TherapistDegreeController::class, 'store']);
-Route::post('/degree/update/{id}', [TherapistDegreeController::class, 'update']);
-Route::post('/degree/delete/{id}', [TherapistDegreeController::class, 'destroy']);
+Route::get('/therapist_degree', [TherapistDegreeController::class, 'index']);
+Route::post('/therapist_degree/store', [TherapistDegreeController::class, 'store']);
+Route::post('/therapist_degree/update/{id}', [TherapistDegreeController::class, 'update']);
+Route::post('/therapist_degree/delete/{id}', [TherapistDegreeController::class, 'destroy']);
