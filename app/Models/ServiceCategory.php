@@ -10,8 +10,15 @@ class ServiceCategory extends Model
 {
     use HasFactory, SoftDeletes;
     
-    public function subcategory(){
-        return $this->hasMany(ServiceSubCategory::class,'service_categorie_id');
+    public function createdBy(){
+        return $this->belongsTo(Admin::class, "created_by")->withTrashed();
     }
+    public function updatedBy(){
+        return $this->belongsTo(Admin::class, "updated_by")->withTrashed();
+    }
+    public function subCategory(){
+        return $this->hasMany(ServiceSubCategory::class, 'service_categorie_id');
+    }
+    
 
 }

@@ -8,9 +8,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class TherapistUpload extends Model
 {
-    use HasFactory;
-    use SoftDeletes; 
-    public $timestamps = false;
+    use HasFactory, SoftDeletes;
+    
     public function therapist(){
         return $this->belongsTo(Therapist::class, 'id');
     }

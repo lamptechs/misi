@@ -8,9 +8,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Therapist extends Model
 {
-    // use HasFactory, SoftDeletes;
+
     use SoftDeletes; 
-    public $timestamps = false;
 
     public function file_info(){
        
