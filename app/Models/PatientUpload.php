@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class PatientUpload extends Model
 {
     use HasFactory;
-    public $timestamps = false;
+   
     public function patient(){
         return $this->belongsTo(User::class, 'id');
     }

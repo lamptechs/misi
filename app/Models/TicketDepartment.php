@@ -8,5 +8,4 @@ use Illuminate\Database\Eloquent\Model;
 class TicketDepartment extends Model
 {
     use HasFactory;
-    public $timestamps = false;
 }

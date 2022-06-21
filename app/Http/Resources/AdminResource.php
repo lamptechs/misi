@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ServiceSubCategoryResource extends JsonResource
+class AdminResource extends JsonResource
 {
     protected $withoutFields = [];
 
@@ -24,15 +24,6 @@ class ServiceSubCategoryResource extends JsonResource
     }
 
     /**
-     * Collection
-     */
-    public static function collection($resource){
-        return tap(new ServiceSubCategoryCollection($resource), function ($collection) {
-            $collection->collects = __CLASS__;
-        });
-    }
-
-    /**
      * Transform the resource into an array.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -41,10 +32,8 @@ class ServiceSubCategoryResource extends JsonResource
     public function toArray($request)
     {
         return $this->filter([
-            "name"                      => $this->name,
-            "status"                    => $this->status,
-            "remarks"                   => $this->remarks,
-            "service_category"          => (new ServiceCategoryResource($this->category))->hide(["created_by", "updated_by"])
+            "name"      => $this->name,
+            "email"     => $this->email,
         ]);
     }
 }

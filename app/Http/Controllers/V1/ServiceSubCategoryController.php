@@ -9,6 +9,7 @@ use App\Models\ServiceCategory;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\ServiceSubCategoryResource;
+use Exception;
 use Illuminate\Support\Facades\DB;
 
 class ServiceSubCategoryController extends Controller
@@ -97,7 +98,6 @@ class ServiceSubCategoryController extends Controller
             $subservice->status = $request->status;
             $subservice->remarks = $request->remarks ?? "";
             $subservice->created_by = 1;
-            $subservice->created_at = Carbon::Now();
             $subservice->save();
             
             $this->apiSuccess();
@@ -157,7 +157,6 @@ class ServiceSubCategoryController extends Controller
             $subservice->status = $request->status;
             $subservice->remarks = $request->remarks ?? "";
             $subservice->updated_by = 1;
-            $subservice->updated_at = Carbon::Now();
             $subservice->save();
             
             $this->apiSuccess();

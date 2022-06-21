@@ -14,7 +14,13 @@ class ServiceCategoryController extends Controller
 {
     //Get All Value
     public function index(){
-        return ServiceCategory::all();
+        try{
+            $this->data = ServiceCategoryResource::collection(ServiceCategory::all());
+            return $this->apiOutput("Service Category Loaded Successfully");
+
+        }catch(Exception $e){
+            return $this->apiOutput($this->getError($e), 500);
+        }
     }
 
     public function store(Request $request){
@@ -25,8 +31,7 @@ class ServiceCategoryController extends Controller
                 'remarks' => 'nullable|min:4' 
             ]);
              
-            if ($validator->fails()) {
-    
+            if ($validator->fails()) {    
                 $this->apiOutput($this->getValidationError($validator), 200);
             }
     
@@ -34,13 +39,12 @@ class ServiceCategoryController extends Controller
             $service->name = $request->name;
             $service->status = $request->status;
             $service->remarks = $request->remarks ?? "";
-            $service->created_by = 1;
-            $service->created_at = Carbon::Now();
+            $service->created_by = $request->user()->id ?? null;
             $service->save();
             
             $this->apiSuccess();
             $this->data = (new ServiceCategoryResource($service));
-            return $this->apiOutput();
+            return $this->apiOutput("Service Category added successfully", 201);
 
         }catch(Exception $e){
             return $this->apiOutput($this->getError( $e), 500);
@@ -48,7 +52,7 @@ class ServiceCategoryController extends Controller
     }
 
      //Update Service
-     public function update(Request $request, $id){
+     public function update(Request $request){
 
         try{
             $validator = Validator::make($request->all(), [
@@ -56,17 +60,18 @@ class ServiceCategoryController extends Controller
                 'remarks' => 'nullable|min:4' 
             ]);
              
-            if ($validator->fails()) {
-    
+            if ($validator->fails()) {    
                 $this->apiOutput($this->getValidationError($validator), 400);
             }
     
-            $service = ServiceCategory::find($id);
+            $service = ServiceCategory::find($request->id);
+            if( empty($service) ){
+                $this->apiOutput("Service Category Not Found", 400);
+            }
             $service->name = $request->name;
             $service->status = $request->status;
             $service->remarks = $request->remarks ?? "";
-            $service->updated_by = 1;
-            $service->updated_at = Carbon::Now();
+            $service->updated_by = $request->user()->id ?? null;
             $service->save();
             
             $this->apiSuccess();
@@ -79,10 +84,13 @@ class ServiceCategoryController extends Controller
      }
 
      //Service Destroy
-     public function destroy($id){
-
-         ServiceCategory::destroy($id);
-         $this->apiSuccess();
-         return $this->apiOutput("Service Category Deleted Successfully", 200);
+    public function destroy($id){
+        try{
+            ServiceCategory::destroy($id);
+            $this->apiSuccess();
+            return $this->apiOutput("Service Category Deleted Successfully", 200);
+        }catch(Exception $e){
+            return $this->apiOutput($this->getError( $e), 500);
+        }
     }
 }

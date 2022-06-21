@@ -8,5 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class Ocupation extends Model
 {
     use HasFactory;
-    public $timestamps = false;
+   
 }

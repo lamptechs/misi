@@ -2,9 +2,10 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\JsonResource;
+use App\Models\ServiceSubCategory;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class ServiceCategoryResource extends JsonResource
+class ServiceSubCategoryCollection extends ResourceCollection
 {
     protected $withoutFields = [];
 
@@ -24,6 +25,15 @@ class ServiceCategoryResource extends JsonResource
     }
 
     /**
+     * Process The Collection
+     */
+    protected function processCollection($request){
+        return $this->collection->map(function (ServiceSubCategory $resource) use ($request) {
+            return $resource->hide($this->withoutFields)->toArray($request);
+        })->all();
+    }
+
+    /**
      * Transform the resource into an array.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -31,12 +41,8 @@ class ServiceCategoryResource extends JsonResource
      */
     public function toArray($request)
     {
-        return $this->filter([
-            "name"                      => $this->name,
-            "status"                    => $this->status,
-            "remarks"                   => $this->remarks,
-            "created_by"                => $this->created_by ? (new AdminResource($this->createdBy)) : null,
-            "updated_by"                => $this->updated_by ? (new AdminResource($this->updatedBy)) : null,
-        ]);
+        return $this->processCollection($request);
     }
+
+
 }
