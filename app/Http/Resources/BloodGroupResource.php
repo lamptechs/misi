@@ -6,6 +6,23 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class BloodGroupResource extends JsonResource
 {
+    protected $withoutFields = [];
+
+    /**
+     * Set Hidden Item 
+     */
+    public function hide(array $hide = []){
+        $this->withoutFields = $hide;
+        return $this;
+    }
+
+    /**
+     * Filter Hide Items
+     */
+    protected function filter($data){
+        return collect($data)->forget($this->withoutFields)->toArray();
+    }
+
     /**
      * Transform the resource into an array.
      *
@@ -14,11 +31,13 @@ class BloodGroupResource extends JsonResource
      */
     public function toArray($request)
     {
-        return [
-            "name" => $this->name,
-            "status"                    => $this->status,
-            "remarks"                   => $this->remarks
+        return $this->filter([
 
-        ];
+            "name"                      => $this->name,
+            "status"                    => $this->status,
+            "created_by"                => $this->created_by /*? (new AdminResource($this->createdBy)) : null*/,
+            "updated_by"                => $this->updated_by /*? (new AdminResource($this->updatedBy)) : null*/,
+
+        ]);
     }
 }

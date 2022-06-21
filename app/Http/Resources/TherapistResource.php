@@ -4,8 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-
-class UserResource extends JsonResource
+class TherapistResource extends JsonResource
 {
     protected $withoutFields = [];
 
@@ -28,7 +27,7 @@ class UserResource extends JsonResource
      * Collection
      */
     public static function collection($resource){
-        return tap(new UserCollection($resource), function ($collection) {
+        return tap(new TherapistCollection($resource), function ($collection) {
             $collection->collects = __CLASS__;
         });
     }
@@ -42,33 +41,25 @@ class UserResource extends JsonResource
     public function toArray($request)
     {
         return $this->filter([
-            "id"     => $this->id,
-            "source" => $this->source,
+            "id"         => $this->id,
             "first_name" => $this->first_name,
             "last_name" => $this->last_name,
             "email"=> $this->email,
             "phone"=> $this->phone,
-            "alternet_phone"=> $this->alternet_phone,
             "address"=> $this->address,
-            "area"=> $this->area,
-            "city"=> $this->city,
+            "language"=> $this->language,
             "bsn_number"=> $this->bsn_number,
             "dob_number"=> $this->dob_number,
             "insurance_number"=> $this->insurance_number,
             "emergency_contact"=> $this->emergency_contact,
-            "age"=> $this->age,
             "gender"=> $this->gender,
-            "marital_status"=> $this->marital_status,
-            "medical_history"=> $this->medical_history,
             "date_of_birth"=> $this->date_of_birth,
-            "occupation"=> $this->occupation,
-            "remarks" => $this->remarks,
-            "image"=> $this->image,
-            "image_url"=> $this->image_url,
+            "status"   => $this->status,
+            "therapist_type"          => (new TherapistTypeResource($this->therapistType))->hide(["created_by", "updated_by"]),
             "blood_group"          => (new BloodGroupResource($this->blood))->hide(["created_by", "updated_by"]),
             "country"          => (new CountryResource($this->country))->hide(["created_by", "updated_by"]),
             "state"          => (new StateResource($this->state))->hide(["created_by", "updated_by"]),
-            "file_details"          => (new PatientUploadResource($this->fileInfo))->hide(["created_by", "updated_by"]),
+            "file_details"          => (new TherapistUploadResource($this->fileInfo))->hide(["created_by", "updated_by"]),
             "created_by"  => $this->created_by,
             "updated_by"  => $this->updated_by
         ]);

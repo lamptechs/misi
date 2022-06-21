@@ -3,9 +3,8 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-// use App\Http\Resources\ServiceSubCategoryResource;
 
-class ServiceCategoryResource extends JsonResource
+class TherapistUploadResource extends JsonResource
 {
     protected $withoutFields = [];
 
@@ -33,12 +32,14 @@ class ServiceCategoryResource extends JsonResource
     public function toArray($request)
     {
         return $this->filter([
-            "id"                       => $this->id,
-            "name"                      => $this->name,
-            "status"                    => $this->status,
-            "remarks"                   => $this->remarks,
+
+            "id" => $this->id,
+            "therapist_id" => $this->therapist_id,
+            "file_name"  => $this->file_name,
+            "file_url"   => $this->file_url,
             "created_by"                => $this->created_by /*? (new AdminResource($this->createdBy)) : null*/,
             "updated_by"                => $this->updated_by /*? (new AdminResource($this->updatedBy)) : null*/,
+
         ]);
     }
 }

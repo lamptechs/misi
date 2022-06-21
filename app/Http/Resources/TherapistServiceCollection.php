@@ -2,10 +2,9 @@
 
 namespace App\Http\Resources;
 
-// use App\Models\ServiceSubCategory;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class ServiceSubCategoryCollection extends ResourceCollection
+class TherapistServiceCollection extends ResourceCollection
 {
     protected $withoutFields = [];
 
@@ -28,10 +27,7 @@ class ServiceSubCategoryCollection extends ResourceCollection
      * Process The Collection
      */
     protected function processCollection($request){
-        // return $this->collection->map(function (ServiceSubCategory $resource) use ($request) {
-        //     return $resource->hide($this->withoutFields)->toArray($request);
-        // })->all();
-        return $this->collection->map(function (ServiceSubCategoryResource $resource) use ($request) {
+        return $this->collection->map(function (TherapistServiceResource $resource) use ($request) {
             return $resource->hide($this->withoutFields)->toArray($request);
         })->all();
     }

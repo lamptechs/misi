@@ -8,6 +8,7 @@ use App\Models\Ocupation;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Exception;
+use App\Http\Resources\OccupationResource;
 
 class OccupationController extends Controller
 {
@@ -18,7 +19,13 @@ class OccupationController extends Controller
      */
     public function index()
     {
-        return Ocupation::all();
+        try{
+            $this->data = OccupationResource::collection(Ocupation::all());
+            return $this->apiOutput("Occupation Loaded Successfully");
+
+        }catch(Exception $e){
+            return $this->apiOutput($this->getError($e), 500);
+        }
     }
 
 
@@ -52,7 +59,7 @@ class OccupationController extends Controller
             $occupation->created_at = Carbon::Now();
             $occupation->save();
             $this->apiSuccess();
-            // $this->data = (new ServiceCategoryResource($service));
+            $this->data = (new OccupationResource($occupation));
             return $this->apiOutput();
         }catch(Exception $e){
             return $this->apiOutput($this->getError( $e), 500);
@@ -111,7 +118,7 @@ class OccupationController extends Controller
             $occupation->updated_at = Carbon::Now();
             $occupation->save();
             $this->apiSuccess();
-            // $this->data = (new ServiceCategoryResource($service));
+            $this->data = (new OccupationResource($occupation));
             return $this->apiOutput();
         }catch(Exception $e){
             return $this->apiOutput($this->getError( $e), 500);

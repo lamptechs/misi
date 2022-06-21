@@ -9,6 +9,7 @@ use App\Models\ServiceCategory;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\ServiceSubCategoryResource;
+use App\Http\Resources\ServiceSubCategoryCollection;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
@@ -21,57 +22,19 @@ class ServiceSubCategoryController extends Controller
      */
     public function index()
     {
-        $subs = ServiceSubCategory::all();
-
-        // $sub = ServiceSubCategory::select('service_sub_categories.*')->
-        // whereHas('service_categories','service_categories.id','=','service_sub_categories_id')->get('service_categories.name');
-        // $subs = DB::table('service_sub_categories')
-        //     ->join('service_categories', 'service_sub_categories.service_categorie_id', '=', 'service_categories.id')
-        //     ->select('service_sub_categories.*','service_categories.name')
-        //     ->get();
-       
-        // echo $subs;
-        // $subs = $sub;
-        // foreach($subs as $sub){
-        //     if($sub->status == 1){
-        //         $status = 'Active';
-        //     }
-        //     if($sub->status == 0){
-        //         $status = 'Inactive';
-        //     }
-        //      $params = array(
-        //         "ID" => $sub->id,
-        //         "Service Category Name" => $sub->category->name,
-        //         "Name" => $sub->name,
-        //         "Status" => $status,
-        //         "Remarks" => $sub->remarks,
-        //         "Created By" => $sub->created_by,
-        //         "Updated By" => $sub->updated_by,
-        //         "Created At" => $sub->created_at,
-        //         "Updated At" => $sub->updated_at
-    
-        //     );
+        try{
             
-        //     return $params;
-        // }
-        
-        return $subs;
-        
-        
+            $this->data = ServiceSubCategoryResource::collection(ServiceSubCategory::all());
+            return $this->apiOutput("Service SubCategory Loaded Successfully");
+
+        }catch(Exception $e){
+            return $this->apiOutput($this->getError($e), 500);
+        }
     
     
        
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -116,17 +79,6 @@ class ServiceSubCategoryController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
     {
         //
     }

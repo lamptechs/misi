@@ -8,6 +8,7 @@ use App\Models\TicketDepartment;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Exception;
+use App\Http\Resources\TicketDepartmentResource;
 
 class TicketDepartmentController extends Controller
 {
@@ -18,7 +19,13 @@ class TicketDepartmentController extends Controller
      */
     public function index()
     {
-        return TicketDepartment::all();
+        try{
+            $this->data = TicketDepartmentResource::collection(TicketDepartment::all());
+            return $this->apiOutput("Ticket Department Type Loaded Successfully");
+
+        }catch(Exception $e){
+            return $this->apiOutput($this->getError($e), 500);
+        }
     }
 
 
@@ -49,7 +56,7 @@ class TicketDepartmentController extends Controller
             $ticket_department->created_at = Carbon::Now();
             $ticket_department->save();
             $this->apiSuccess();
-            // $this->data = (new ServiceCategoryResource($service));
+            $this->data = (new TicketDepartmentResource($ticket_department));
             return $this->apiOutput();
         }catch(Exception $e){
             return $this->apiOutput($this->getError( $e), 500);
@@ -110,7 +117,7 @@ class TicketDepartmentController extends Controller
             $ticket_department->updated_at = Carbon::Now();
             $ticket_department->save();
             $this->apiSuccess();
-            // $this->data = (new ServiceCategoryResource($service));
+            $this->data = (new TicketDepartmentResource($ticket_department));
             return $this->apiOutput();
         }catch(Exception $e){
             return $this->apiOutput($this->getError( $e), 500);

@@ -3,9 +3,8 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-// use App\Http\Resources\ServiceCategoryResource;
 
-class ServiceSubCategoryResource extends JsonResource
+class StateResource extends JsonResource
 {
     protected $withoutFields = [];
 
@@ -20,17 +19,8 @@ class ServiceSubCategoryResource extends JsonResource
     /**
      * Filter Hide Items
      */
-    protected function filterFields($data){
+    protected function filter($data){
         return collect($data)->forget($this->withoutFields)->toArray();
-    }
-
-    /**
-     * Collection
-     */
-    public static function collection($resource){
-        return tap(new ServiceSubCategoryCollection($resource), function ($collection) {
-            $collection->collects = __CLASS__;
-        });
     }
 
     /**
@@ -42,11 +32,12 @@ class ServiceSubCategoryResource extends JsonResource
     public function toArray($request)
     {
         return $this->filter([
-            "id"                       => $this->id,
-            "name"                      => $this->name,
+
+            "name" => $this->name,
             "status"                    => $this->status,
-            "remarks"                   => $this->remarks,
-            "service_category"          => (new ServiceCategoryResource($this->category))->hide(["created_by", "updated_by"])
+            "created_by"                => $this->created_by /*? (new AdminResource($this->createdBy)) : null*/,
+            "updated_by"                => $this->updated_by /*? (new AdminResource($this->updatedBy)) : null*/,
+
         ]);
     }
 }

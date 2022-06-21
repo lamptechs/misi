@@ -8,7 +8,7 @@ use App\Models\Ticket;
 Use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Exception;
-
+use App\Http\Resources\TicketResource;
 
 class TicketController extends Controller
 {
@@ -19,7 +19,13 @@ class TicketController extends Controller
      */
     public function index()
     {
-        return Ticket::all();
+        try{
+            $this->data = TicketResource::collection(Ticket::all());
+            return $this->apiOutput("Ticket Loaded Successfully");
+
+        }catch(Exception $e){
+            return $this->apiOutput($this->getError($e), 500);
+        }
     }
 
 
@@ -58,7 +64,7 @@ class TicketController extends Controller
             $ticket->created_at = Carbon::Now();
             $ticket->save();
             $this->apiSuccess();
-            // $this->data = (new ServiceCategoryResource($service));
+            $this->data = (new TicketResource($ticket));
             return $this->apiOutput();
         }catch(Exception $e){
             return $this->apiOutput($this->getError( $e), 500);
@@ -127,7 +133,7 @@ class TicketController extends Controller
             $ticket->updated_at = Carbon::Now();
             $ticket->save();
             $this->apiSuccess();
-            // $this->data = (new ServiceCategoryResource($service));
+            $this->data = (new TicketResource($ticket));
             return $this->apiOutput();
         }catch(Exception $e){
             return $this->apiOutput($this->getError( $e), 500);

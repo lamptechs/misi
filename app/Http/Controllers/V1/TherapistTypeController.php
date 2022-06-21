@@ -8,6 +8,7 @@ use App\Models\TherapistType;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Exception;
+use App\Http\Resources\TherapistTypeResource;
 
 class TherapistTypeController extends Controller
 {
@@ -18,7 +19,13 @@ class TherapistTypeController extends Controller
      */
     public function index()
     {
-        return TherapistType::all();
+        try{
+            $this->data = TherapistTypeResource::collection(TherapistType::all());
+            return $this->apiOutput("Therapist Type Loaded Successfully");
+
+        }catch(Exception $e){
+            return $this->apiOutput($this->getError($e), 500);
+        }
     }
 
 
@@ -52,7 +59,7 @@ class TherapistTypeController extends Controller
             $therapist_type->created_at = Carbon::Now();
             $therapist_type->save();
             $this->apiSuccess();
-            // $this->data = (new ServiceCategoryResource($service));
+            $this->data = (new TherapistTypeResource($therapist_type));
             return $this->apiOutput();
         }catch(Exception $e){
             return $this->apiOutput($this->getError( $e), 500);
@@ -101,7 +108,7 @@ class TherapistTypeController extends Controller
             $therapist_type->updated_at = Carbon::Now();
             $therapist_type->save();
             $this->apiSuccess();
-            // $this->data = (new ServiceCategoryResource($service));
+            $this->data = (new TherapistTypeResource($therapist_type));
             return $this->apiOutput();
         }
         catch(Exception $e){

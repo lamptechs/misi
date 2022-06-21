@@ -3,9 +3,8 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-// use App\Http\Resources\ServiceCategoryResource;
 
-class ServiceSubCategoryResource extends JsonResource
+class TherapistServiceResource extends JsonResource
 {
     protected $withoutFields = [];
 
@@ -28,7 +27,7 @@ class ServiceSubCategoryResource extends JsonResource
      * Collection
      */
     public static function collection($resource){
-        return tap(new ServiceSubCategoryCollection($resource), function ($collection) {
+        return tap(new TherapistServiceCollection($resource), function ($collection) {
             $collection->collects = __CLASS__;
         });
     }
@@ -42,11 +41,14 @@ class ServiceSubCategoryResource extends JsonResource
     public function toArray($request)
     {
         return $this->filter([
-            "id"                       => $this->id,
-            "name"                      => $this->name,
-            "status"                    => $this->status,
-            "remarks"                   => $this->remarks,
-            "service_category"          => (new ServiceCategoryResource($this->category))->hide(["created_by", "updated_by"])
+            "id"         => $this->id,
+            "therapist"          => (new TherapistResource($this->therapist))->hide(["created_by", "updated_by"]),
+            "service_category"          => (new ServiceCategoryResource($this->category))->hide(["created_by", "updated_by"]),
+            "service_subcategory"          => (new ServiceSubCategoryResource($this->subCategory))->hide(["created_by", "updated_by"]),
+            "name"    => $this->name,
+            "status"  => $this->status,
+            "created_by"  => $this->created_by,
+            "updated_by"  => $this->updated_by
         ]);
     }
 }

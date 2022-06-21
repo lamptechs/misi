@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Auth\Events\Registered;
 use Exception;
+use App\Http\Resources\UserResource;
 
 class PatientController extends Controller
 {
@@ -29,7 +30,13 @@ class PatientController extends Controller
      */
     public function index()
     {
-        return User::all();
+        try{
+            $this->data = UserResource::collection(User::all());
+            return $this->apiOutput("Patient Loaded Successfully");
+
+        }catch(Exception $e){
+            return $this->apiOutput($this->getError($e), 500);
+        }
     }
 
 
@@ -127,9 +134,9 @@ class PatientController extends Controller
                 return $this->apiOutput($this->getError( $e), 500);
                 DB::rollBack();
             }
-            // $this->apiSuccess();
-            // // $this->data = (new ServiceCategoryResource($service));
-            // return $this->apiOutput();
+            $this->apiSuccess();
+            $this->data = (new UserResource($data));
+            return $this->apiOutput();
         }catch(Exception $e){
             
             return $this->apiOutput($this->getError( $e), 500);
@@ -142,7 +149,7 @@ class PatientController extends Controller
      * Save File Info
      */
     public function saveFileInfo($request, $patient){
-        $data = $patient->file_info;
+        $data = $patient->fileInfo;
         if(empty($data)){
             $data = new PatientUpload();            
             $data->created_by = 1;
@@ -184,16 +191,6 @@ class PatientController extends Controller
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.

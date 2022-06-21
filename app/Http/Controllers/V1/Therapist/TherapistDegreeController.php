@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Exception;
+use App\Http\Resources\TherapistDegreeResource;
 
 class TherapistDegreeController extends Controller
 {
@@ -19,7 +20,13 @@ class TherapistDegreeController extends Controller
      */
     public function index()
     {
-        return TherapistDegree::all();
+        try{
+            $this->data = TherapistDegreeResource::collection(TherapistDegree::all());
+            return $this->apiOutput("Therapist Degree Loaded Successfully");
+
+        }catch(Exception $e){
+            return $this->apiOutput($this->getError($e), 500);
+        }
     }
 
 

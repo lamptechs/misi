@@ -58,6 +58,9 @@ trait Message{
      * This Method for API Response
      */
     protected function apiOutput($message = "", $status_code = 200){
+        // if($status_code === 200){
+        //     $true = true;
+        // }
         $content = [
             'status'    => $this->status,
             'message'   => $message ?? $this->message,

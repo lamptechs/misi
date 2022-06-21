@@ -15,4 +15,8 @@ class BloodGroup extends Model
     public function updatedBy(){
         return $this->belongsTo(Admin::class, "updated_by")->withTrashed();
     }
+    // public function user(){
+    //     return $this->hasMany(User::class, 'blood_group_id');
+    // }
+    
 }

@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Exception;
+use App\Http\Resources\CountryResource;
 
 class CountryController extends Controller
 {
@@ -18,7 +19,13 @@ class CountryController extends Controller
      */
     public function index()
     {
-        return Country::all();
+        try{
+            $this->data = CountryResource::collection(Country::all());
+            return $this->apiOutput("Country Loaded Successfully");
+
+        }catch(Exception $e){
+            return $this->apiOutput($this->getError($e), 500);
+        }
     }
 
 
@@ -51,7 +58,7 @@ class CountryController extends Controller
             $country->created_at = Carbon::Now();
             $country->save();
             $this->apiSuccess();
-            // $this->data = (new ServiceCategoryResource($service));
+            $this->data = (new CountryResource($country));
             return $this->apiOutput();
         }catch(Exception $e){
             return $this->apiOutput($this->getError( $e), 500);
@@ -103,7 +110,7 @@ class CountryController extends Controller
             $country->updated_at	 = Carbon::Now();
             $country->save();
             $this->apiSuccess();
-            // $this->data = (new ServiceCategoryResource($service));
+            $this->data = (new CountryResource($country));
             return $this->apiOutput();
         }catch(Exception $e){
             return $this->apiOutput($this->getError( $e), 500);

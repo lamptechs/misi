@@ -8,6 +8,7 @@ use App\Models\TherapistService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Exception;
+use App\Http\Resources\TherapistServiceResource;
 
 class TherapistServiceController extends Controller
 {
@@ -18,7 +19,13 @@ class TherapistServiceController extends Controller
      */
     public function index()
     {
-        return TherapistService::all();
+        try{
+            $this->data = TherapistServiceResource::collection(TherapistService::all());
+            return $this->apiOutput("Therapist Service Loaded Successfully");
+
+        }catch(Exception $e){
+            return $this->apiOutput($this->getError($e), 500);
+        }
     }
 
     /**
@@ -63,7 +70,7 @@ class TherapistServiceController extends Controller
             $therapistservice->created_at = Carbon::Now();
             $therapistservice->save();
             $this->apiSuccess();
-            // $this->data = (new BloodGroupResource($blood_group));
+            $this->data = (new TherapistServiceResource($therapistservice));
             return $this->apiOutput();
         }catch(Exception $e){
             return $this->apiOutput($this->getError( $e), 500);
@@ -127,7 +134,7 @@ class TherapistServiceController extends Controller
             $therapistservice->updated_at = Carbon::Now();
             $therapistservice->save();
             $this->apiSuccess();
-            // $this->data = (new BloodGroupResource($blood_group));
+            $this->data = (new TherapistServiceResource($therapistservice));
             return $this->apiOutput();
         }catch(Exception $e){
             return $this->apiOutput($this->getError( $e), 500);

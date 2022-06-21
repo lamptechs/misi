@@ -8,6 +8,7 @@ use App\Models\Degree;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Exception;
+use App\Http\Resources\DegreeResource;
 
 class DegreeController extends Controller
 {
@@ -18,7 +19,13 @@ class DegreeController extends Controller
      */
     public function index()
     {
-        return Degree::all();
+        try{
+            $this->data = DegreeResource::collection(Degree::all());
+            return $this->apiOutput("Degree Loaded Successfully");
+
+        }catch(Exception $e){
+            return $this->apiOutput($this->getError($e), 500);
+        }
     }
 
 
@@ -52,7 +59,7 @@ class DegreeController extends Controller
             $degree->created_at = Carbon::Now();
             $degree->save();
             $this->apiSuccess();
-            // $this->data = (new ServiceCategoryResource($service));
+            $this->data = (new DegreeResource($degree));
             return $this->apiOutput();
         }catch(Exception $e){
             return $this->apiOutput($this->getError( $e), 500);
@@ -114,7 +121,7 @@ class DegreeController extends Controller
             $degree->updated_at = Carbon::Now();
             $degree->save();
             $this->apiSuccess();
-            // $this->data = (new ServiceCategoryResource($service));
+            $this->data = (new DegreeResource($degree));
             return $this->apiOutput();
         }catch(Exception $e){
             return $this->apiOutput($this->getError( $e), 500);

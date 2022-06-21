@@ -51,7 +51,7 @@ Route::post('/therapistService/delete/{id}', [TherapistServiceController::class,
 Route::get('/therapist', [TherapistController::class, 'index']);
 Route::post('/therapist/store', [TherapistController::class, 'store']);
 Route::post('/therapist/update/{id}', [TherapistController::class, 'update']);
-Route::post('/therapist/delete/{id}', [TherapistController::class, 'destroy'])->withTrashed();
+Route::post('/therapist/delete/{id}', [TherapistController::class, 'destroy']);
 
 //Patient Create
 Route::get('/patient', [PatientController::class, 'index']);

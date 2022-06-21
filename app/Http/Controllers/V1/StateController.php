@@ -8,6 +8,7 @@ use App\Models\State;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Exception;
+use App\Http\Resources\StateResource;
 
 class StateController extends Controller
 {
@@ -18,7 +19,13 @@ class StateController extends Controller
      */
     public function index()
     {
-          return State::all();
+        try{
+            $this->data = StateResource::collection(State::all());
+            return $this->apiOutput("State Loaded Successfully");
+
+        }catch(Exception $e){
+            return $this->apiOutput($this->getError($e), 500);
+        }
     }
 
     /**
@@ -50,7 +57,7 @@ class StateController extends Controller
             $state->created_at = Carbon::Now();
             $state->save();
             $this->apiSuccess();
-            // $this->data = (new ServiceCategoryResource($service));
+            $this->data = (new StateResource($state));
             return $this->apiOutput();
         }catch(Exception $e){
             return $this->apiOutput($this->getError( $e), 500);
@@ -91,7 +98,7 @@ class StateController extends Controller
                 $state->updated_at = Carbon::Now();
                 $state->save();
                 $this->apiSuccess();
-                // $this->data = (new ServiceCategoryResource($service));
+                $this->data = (new StateResource($state));
                 return $this->apiOutput();
             }catch(Exception $e){
                 return $this->apiOutput($this->getError( $e), 500);

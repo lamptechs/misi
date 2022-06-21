@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Auth\Events\Registered;
 use Exception;
+use App\Http\Resources\TherapistResource;
 
 class TherapistController extends Controller
 {
@@ -27,17 +28,13 @@ class TherapistController extends Controller
      */
     public function index()
     {
-        return Therapist::all();
-    }
+        try{
+            $this->data = TherapistResource::collection(Therapist::all());
+            return $this->apiOutput("Therapist Loaded Successfully");
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        }catch(Exception $e){
+            return $this->apiOutput($this->getError($e), 500);
+        }
     }
 
     /**
@@ -123,12 +120,15 @@ class TherapistController extends Controller
                 return $this->apiOutput($this->getError( $e), 500);
                 DB::rollBack();
             }
+            $this->apiSuccess();
+            $this->data = (new TherapistResource($data));
+            return $this->apiOutput();
             
     }
 
     // Save File Info
     public function saveFileInfo($request, $therapist){
-        $data = $therapist->file_info;
+        $data = $therapist->fileInfo;
         if(empty($data)){
             $data = new TherapistUpload();            
             $data->created_at = Carbon::Now();
@@ -168,16 +168,6 @@ class TherapistController extends Controller
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
@@ -200,8 +190,8 @@ class TherapistController extends Controller
     public function destroy($id)
     {
         try{
-            $data = $this->getModel()->withTrashed()->find($id);
-            $data->forceDelete();
+            $data = $this->getModel()->find($id);
+            $data->delete();
             // Therapist::destroy($id);
             $this->apiSuccess();
             return $this->apiOutput("Therapist Deleted Successfully", 200);
