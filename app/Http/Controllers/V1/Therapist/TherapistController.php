@@ -137,19 +137,20 @@ class TherapistController extends Controller
         //     $data->updated_by = $request->updated_by;
         // }
 
-        if($request->file != null)
-        {
-            // $extension = $request->file->extension();
-            $id = uniqid(5);
-            $fileName = $id.'.'.$request->file->extension();  
-            $file = $request->file->move(public_path('upload'), $fileName);
-            $fileUrl = url('public/upload/' . $fileName);
-        }
+        // if($request->file != null)
+        // {
+        //     // $extension = $request->file->extension();
+        //     $id = uniqid(5);
+        //     $fileName = $id.'.'.$request->file->extension();  
+        //     $file = $request->file->move(public_path('upload'), $fileName);
+        //     $fileUrl = url('public/upload/' . $fileName);
+        // }
 
 
         $data->therapist_id  = $therapist->id;
-        $data->file_name = $fileName;
-        $data->file_url = $fileUrl;
+        $data->file_name = "null";
+        // $data->file_url = $fileUrl;
+        $data->file_url = /*$this->addImage($request->file)*/ "null";
 
         $data->save();
        
