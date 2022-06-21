@@ -150,7 +150,8 @@ class TherapistController extends Controller
         $data->therapist_id  = $therapist->id;
         $data->file_name = "null";
         // $data->file_url = $fileUrl;
-        $data->file_url = /*$this->addImage($request->file)*/ "null";
+        // $data->file_url = /*$this->addImage($request->file)*/ "null";
+        $data->file_url =  "null";
 
         $data->save();
        
