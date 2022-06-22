@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Auth\Events\Registered;
 use Exception;
 use App\Http\Resources\TherapistResource;
+use Illuminate\Support\Facades\Hash;
 
 class TherapistController extends Controller
 {
@@ -21,6 +22,48 @@ class TherapistController extends Controller
     private function getModel(){
         return new Therapist();
     }
+
+    /**
+     * Show Login
+     */
+    public function showLogin(Request $request){
+        $this->data = [
+            "email"     => "required",
+            "password"  => "required",
+        ];
+        $this->apiSuccess("This credentials are required for Login ");
+        return $this->apiOutput();
+    }
+
+    /**
+     * Login
+     */
+    public function login(Request $request){
+        try{
+            $validator = Validator::make($request->all(), [
+                "email"     => ["required", "email", "exists:therapists,email"],
+                "password"  => ["required", "string", "min:4", "max:40"]
+            ]); 
+            if($validator->fails()){
+                return $this->apiOutput($this->getValidationError($validator), 400);
+            }
+            $therapist = $this->getModel()->where("email", $request->email)->first();
+            if( !Hash::check($request->password, $therapist->password) ){
+                return $this->apiOutput("Sorry! Password Dosen't Match", 401);
+            }
+            if( !$therapist->status ){
+                return $this->apiOutput("Sorry! your account is temporaly blocked", 401);
+            }
+            // Issueing Access Token
+            $this->access_token = $therapist->createToken($request->ip() ?? "therapist_access_token")->plainTextToken;
+            $this->apiSuccess("Login Successfully");
+            return $this->apiOutput();
+
+        }catch(Exception $e){
+            return $this->apiOutput($this->getError($e), 500);
+        }
+    }
+
     /**
      * Display a listing of the resource.
      *

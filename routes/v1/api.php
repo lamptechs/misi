@@ -125,3 +125,31 @@ Route::middleware(["auth:admin"])->group(function(){
     Route::post('/therapist_degree/delete/{id}', [TherapistDegreeController::class, 'destroy']);
 
 });
+
+
+
+
+/***********************************************************************************
+ * Therapist API Routes
+ ***********************************************************************************/
+Route::get('therapist/login', [TherapistController::class, "showLogin"]);
+Route::post('therapist/login', [TherapistController::class, "login"]);
+/**
+ * Therapist Authentication
+ */
+Route::middleware(["auth:therapists"])->group(function(){
+
+});
+
+
+/***********************************************************************************
+ * Patient API Routes
+ ***********************************************************************************/
+Route::get('patient/login', [PatientController::class, "showLogin"]);
+Route::post('patient/login', [PatientController::class, "login"]);
+/**
+ * Patient Authentication
+ */
+Route::middleware(["auth:patient"])->group(function(){
+
+});

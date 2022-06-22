@@ -17,7 +17,8 @@ return new class extends Migration
             $table->id()->from(10000);
             $table->string("first_name");
             $table->string("last_name");
-            $table->string("email")->nullable();
+            $table->string("email");
+            $table->string("password");
             $table->string("phone")->nullable();
             $table->string("address")->nullable();
             $table->string("language")->nullable();

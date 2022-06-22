@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Auth\Events\Registered;
 use Exception;
 use App\Http\Resources\UserResource;
+use Illuminate\Support\Facades\Hash;
 
 class PatientController extends Controller
 {
@@ -21,6 +22,47 @@ class PatientController extends Controller
      */
     private function getModel(){
         return new User();
+    }
+
+    /**
+     * Show Login
+     */
+    public function showLogin(Request $request){
+        $this->data = [
+            "email"     => "required",
+            "password"  => "required",
+        ];
+        $this->apiSuccess("This credentials are required for Login ");
+        return $this->apiOutput();
+    }
+
+    /**
+     * Login
+     */
+    public function login(Request $request){
+        try{
+            $validator = Validator::make($request->all(), [
+                "email"     => ["required", "email", "exists:users,email"],
+                "password"  => ["required", "string", "min:4", "max:40"]
+            ]); 
+            if($validator->fails()){
+                return $this->apiOutput($this->getValidationError($validator), 400);
+            }
+            $patient = $this->getModel()->where("email", $request->email)->first();
+            if( !Hash::check($request->password, $patient->password) ){
+                return $this->apiOutput("Sorry! Password Dosen't Match", 401);
+            }
+            if( !$patient->status ){
+                return $this->apiOutput("Sorry! your account is temporaly blocked", 401);
+            }
+            // Issueing Access Token
+            $this->access_token = $patient->createToken($request->ip() ?? "patient_access_token")->plainTextToken;
+            $this->apiSuccess("Login Successfully");
+            return $this->apiOutput();
+
+        }catch(Exception $e){
+            return $this->apiOutput($this->getError($e), 500);
+        }
     }
 
     /**

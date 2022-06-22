@@ -46,6 +46,11 @@ return [
             "provider"  => "patients"
         ],
 
+        "therapist" => [
+            "driver"    => "sanctum",
+            "provider"  => "therapists"
+        ],
+
         "admin" => [
             "driver"    => "sanctum",
             "provider"  => "admins",
@@ -75,9 +80,14 @@ return [
             'model' => App\Models\User::class,
         ],
 
-        "patient" => [
+        "patients" => [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
+        ],
+
+        "therapists" => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Therapist::class,
         ],
 
         "admins" => [
