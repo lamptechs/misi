@@ -129,6 +129,8 @@ Route::middleware(["auth:admin"])->group(function(){
 
 
 
+
+
 /***********************************************************************************
  * Therapist API Routes
  ***********************************************************************************/
@@ -137,9 +139,12 @@ Route::post('therapist/login', [TherapistController::class, "login"]);
 /**
  * Therapist Authentication
  */
-Route::middleware(["auth:therapists"])->group(function(){
+Route::middleware(["auth:therapist"])->group(function(){
 
 });
+
+
+
 
 
 /***********************************************************************************
