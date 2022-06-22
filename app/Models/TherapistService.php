@@ -9,9 +9,7 @@ class TherapistService extends Model
 {
     use HasFactory;
     public function therapist(){
-       
         return $this->belongsTo(Therapist::class, 'therapist_id');
-        
     }
     public function category(){
         return $this->belongsTo(ServiceCategory::class, 'service_category_id');

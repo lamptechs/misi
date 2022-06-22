@@ -16,6 +16,6 @@ class ServiceSubCategory extends Model
         return $this->belongsTo(Admin::class, "updated_by")->withTrashed();
     }
     public function category(){
-        return $this->belongsTo(ServiceCategory::class, 'id');
+        return $this->belongsTo(ServiceCategory::class, 'service_categorie_id');
     }
 }

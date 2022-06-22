@@ -56,70 +56,51 @@ class PatientController extends Controller
                 'last_name' => 'required',
                 // 'picture' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:10240',
                 // 'file' => 'required'
-    
             ]
            );
             
             if ($validator->fails()) {
-                return response()->json(
-                    [$validator->errors()],
-                    422
-                );
+                return $this->apiOutput($this->getValidationError($validator), 400);
             }
-
 
             try{
 
                 DB::beginTransaction();
-            if( $request->id == 0 ){
                 $data = $this->getModel();
-                $data->created_by = 1;
                 $data->created_at = Carbon::Now();
-                
-            }
-            //else{
-            //     $data = $this->getModel()->find($request->id);
-            //     $data->modified_by = 1;
-            // }
 
-            // if($request->picture != null)
-            // {
-            //     $id = uniqid(5);
-            //     $imageName = $id.'.'.$request->picture->extension();  
-            //     $image = $request->picture->move(public_path('upload'), $imageName);
-            //     $imageUrl = url('public/upload/' . $imageName);
-            // }
-
-            $data->state_id = $request->state_id;
-            $data->country_id = $request->country_id;
-            $data->blood_group_id = $request->blood_group_id;
-            $data->source = $request->source;
-            $data->first_name = $request->first_name;                  
-            $data->last_name = $request->last_name;
-            // $data->patient_picture_name = $imageName;            
-            // $data->patient_picture_location = $imageUrl;            
-            $data->email = $request->email;
-            $data->phone = $request->phone;
-            $data->alternet_phone = $request->alternet_phone ?? 0;
-            // $data->password = !empty($request->password) ? bcrypt($request->password) : $data->password;
-            $data->address = $request->address;
-            $data->area = $request->area;
-            $data->city = $request->city;
-            $data->bsn_number = $request->bsn_number;
-            $data->dob_number = $request->dob_number;
-            $data->insurance_number = $request->insurance_number;
-            $data->emergency_contact = $request->emergency_contact ?? 0;
-            $data->age = $request->age;
-            $data->gender = $request->gender;
-            $data->marital_status = $request->marital_status;
-            $data->medical_history = $request->medical_history;
-            $data->date_of_birth = Carbon::now();
-            $data->occupation = $request->occupation;
-            $data->remarks = $request->remarks ?? '';
-            $data->password = bcrypt($request->password);
-            $data->image_url = $this->addImage($request->picture);
-            $data->save();
-            $this->saveFileInfo($request, $data);
+                $data->state_id = $request->state_id;
+                $data->country_id = $request->country_id;
+                $data->blood_group_id = $request->blood_group_id;
+                $data->source = $request->source;
+                $data->first_name = $request->first_name;                  
+                $data->last_name = $request->last_name;
+                // $data->patient_picture_name = $imageName;            
+                // $data->patient_picture_location = $imageUrl;            
+                $data->email = $request->email;
+                $data->phone = $request->phone;
+                $data->alternet_phone = $request->alternet_phone ?? 0;
+                // $data->password = !empty($request->password) ? bcrypt($request->password) : $data->password;
+                $data->address = $request->address;
+                $data->area = $request->area;
+                $data->city = $request->city;
+                $data->bsn_number = $request->bsn_number;
+                $data->dob_number = $request->dob_number;
+                $data->insurance_number = $request->insurance_number;
+                $data->emergency_contact = $request->emergency_contact ?? 0;
+                $data->age = $request->age;
+                $data->gender = $request->gender;
+                $data->marital_status = $request->marital_status;
+                $data->medical_history = $request->medical_history;
+                $data->date_of_birth = Carbon::now();
+                $data->occupation = $request->occupation;
+                $data->remarks = $request->remarks ?? '';
+                $data->password = bcrypt($request->password);
+                if($request->hasFile('picture')){
+                    $data->image_url = $this->addImage($request->picture);
+                }
+                $data->save();
+                $this->saveFileInfo($request, $data);
             
             DB::commit();
                     try{
@@ -153,24 +134,16 @@ class PatientController extends Controller
         if(empty($data)){
             $data = new PatientUpload();            
             $data->created_by = 1;
-            $data->created_at = Carbon::Now();
         }
-        // else{
-        //     $data->updated_by = $request->updated_by;
-        // }
 
-        if($request->file != null)
+        if( $request->hasFile('file'))
         {
-            // $extension = $request->file->extension();
-            $id = uniqid(5);
-            $fileName = $id.'.'.$request->file->extension();  
-            $file = $request->file->move(public_path('upload'), $fileName);
-            $fileUrl = url('public/upload/' . $fileName);
+            $fileUrl = $this->addImage($request->file);
         }
 
 
         $data->patient_id = $patient->id;
-        $data->file_name = $fileName;
+        $data->file_name = $request->file_name ?? "Paitent Upload";
         $data->file_url = $fileUrl;
         $data->file_type = $request->file_type;
         $data->status = $request->status;
@@ -220,6 +193,5 @@ class PatientController extends Controller
         }catch(Exception $e){
             return $this->apiOutput($this->getError( $e), 500);
         }
-        
     }
 }

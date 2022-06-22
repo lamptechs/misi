@@ -10,6 +10,6 @@ class PatientUpload extends Model
     use HasFactory;
    
     public function patient(){
-        return $this->belongsTo(User::class, 'id');
+        return $this->belongsTo(User::class, 'patient_id');
     }
 }

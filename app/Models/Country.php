@@ -16,11 +16,6 @@ class Country extends Model
     public function updatedBy(){
         return $this->belongsTo(Admin::class, "updated_by")->withTrashed();
     }
-    // public function country(){
-       
-    //     return $this->belongsTo(User::class, 'id');
-        
-    // }
     public function User(){
         return $this->hasMany(User::class, 'country_id');
     }

@@ -8,6 +8,7 @@ namespace App\Http\Components\Traits;
  */
 
 use Exception;
+use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 
 trait Upload{
@@ -92,13 +93,8 @@ trait Upload{
     }
 
     // Upload Image
-    protected function addImage($request){
-                $id = uniqid(5);
-                $imageName = $id.'.'.$request->extension();  
-                $image = $request->move(public_path('upload'), $imageName);
-                $imageUrl = url('public/upload/' . $imageName);
-                return $imageUrl;
-
+    protected function addImage($file){
+        return Storage::disk("public")->putFile("upload", $file);
     }
 
     
@@ -107,7 +103,7 @@ trait Upload{
      * Upload any Kind of file
      * ---------------------------------------------
      */
-    protected function UploadVideo($request,$fileName,$dir,$oldFile){
+    protected function UploadAnyFile($request,$fileName,$dir,$oldFile){
         if(!$request->hasFile($fileName)){
             return $oldFile;
         }

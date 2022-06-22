@@ -45,23 +45,15 @@ class User extends Authenticatable
     public $timestamps = false;
 
     public function fileInfo(){
-       
-        return $this->hasOne(PatientUpload::class, 'patient_id');
-        
+        return $this->hasMany(PatientUpload::class, 'patient_id');
     }
     public function blood(){
-       
         return $this->belongsTo(BloodGroup::class, 'blood_group_id');
-        
     }
     public function country(){
-       
         return $this->belongsTo(Country::class, 'country_id');
-        
     }
     public function state(){
-       
         return $this->belongsTo(State::class, 'state_id');
-        
     }
 }

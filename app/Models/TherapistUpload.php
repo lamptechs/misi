@@ -11,6 +11,6 @@ class TherapistUpload extends Model
     use HasFactory, SoftDeletes;
     
     public function therapist(){
-        return $this->belongsTo(Therapist::class, 'id');
+        return $this->belongsTo(Therapist::class, 'therapist_id');
     }
 }
