@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string("first_name");
             $table->string("last_name");
             $table->string("email");
-            $table->string("password");
             $table->string("phone")->nullable();
             $table->string("address")->nullable();
             $table->string("language")->nullable();
@@ -35,6 +34,7 @@ return new class extends Migration
             $table->foreignId("country_id")->nullable()->references('id')->on('countries');
             $table->unsignedBigInteger("created_by")->nullable();
             $table->unsignedBigInteger("updated_by")->nullable();
+            $table->string("password");
             $table->timestamps();
             $table->softDeletes();
         });
