@@ -10,7 +10,7 @@ trait Message{
     protected $modal = false;
     protected $table = false;    
     protected $button = false;
-    protected $api_token = "";
+    protected $access_token = "";
     protected $data = [];
     
 
@@ -47,28 +47,25 @@ trait Message{
      * Set api response status as Success
      * This Method is responsible all API Response
      */
-    protected function apiSuccess($message = Null, $data = Null){
+    protected function apiSuccess($message = null, $data = Null){
         $this->status = true;
-        $this->message = !empty($message) ? ( $this->message ?? $message ) : 'Successfully';
-        $this->data = $data;
+        $this->message = $message ?? 'Successfully';
+        $this->data = $data ?? $this->data;
     }
 
     /**
      * Return Default API Output Message
      * This Method for API Response
      */
-    protected function apiOutput($message = "", $status_code = 200){
-        // if($status_code === 200){
-        //     $true = true;
-        // }
+    protected function apiOutput($message = null, $status_code = 200){
         $content = [
             'status'    => $this->status,
             'message'   => $message ?? $this->message,
-            'api_token' => $this->api_token,
+            'access_token' => $this->access_token,
             'data'      => $this->data
         ];
-        if(empty($this->api_token)){
-            unset($content["api_token"]);
+        if(empty($this->access_token)){
+            unset($content["access_token"]);
         }
         return response($content, $status_code);
     }

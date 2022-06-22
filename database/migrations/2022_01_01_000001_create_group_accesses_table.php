@@ -13,15 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('admins', function (Blueprint $table) {
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->foreignId("group_id")->references("id")->on("groups");
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
+        Schema::create('group_accesses', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('group_id');
+            $table->longText('group_access');
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
@@ -32,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('admins');
+        Schema::dropIfExists('group_accesses');
     }
 };

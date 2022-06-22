@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\V1\AdminController;
 use App\Http\Controllers\V1\Therapist\TherapistController;
 use App\Http\Controllers\V1\Therapist\TherapistDegreeController;
 use App\Http\Controllers\V1\Therapist\TherapistServiceController;
@@ -29,86 +30,98 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-//Service Category
-Route::get('/service', [ServiceCategoryController::class, 'index']);
-Route::post('/service/store', [ServiceCategoryController::class, 'store']);
-Route::post('/service/update/{id}', [ServiceCategoryController::class, 'update']);
-Route::post('/service/delete/{id}', [ServiceCategoryController::class, 'destroy']);
+/**
+ * Admin Login Section
+ */
+Route::get('admin/login', [AdminController::class, "showLogin"]);
+Route::post('admin/login', [AdminController::class, "login"]);
+/**
+ * Protect the Route Throw API Token
+ */
+Route::middleware(["auth:admin"])->group(function(){
 
-//Service SubCategory
-Route::get('/subservice', [ServiceSubCategoryController::class, 'index']);
-Route::post('/subservice/store', [ServiceSubCategoryController::class, 'store']);
-Route::post('/subservice/update/{id}', [ServiceSubCategoryController::class, 'update']);
-Route::post('/subservice/delete/{id}', [ServiceSubCategoryController::class, 'destroy']);
+    //Service Category
+    Route::get('/service', [ServiceCategoryController::class, 'index']);
+    Route::post('/service/store', [ServiceCategoryController::class, 'store']);
+    Route::post('/service/update/{id}', [ServiceCategoryController::class, 'update']);
+    Route::post('/service/delete/{id}', [ServiceCategoryController::class, 'destroy']);
 
-//Therapist Service
-Route::get('/therapistService', [TherapistServiceController::class, 'index']);
-Route::post('/therapistService/store', [TherapistServiceController::class, 'store']);
-Route::post('/therapistService/update/{id}', [TherapistServiceController::class, 'update']);
-Route::post('/therapistService/delete/{id}', [TherapistServiceController::class, 'destroy']);
+    //Service SubCategory
+    Route::get('/subservice', [ServiceSubCategoryController::class, 'index']);
+    Route::post('/subservice/store', [ServiceSubCategoryController::class, 'store']);
+    Route::post('/subservice/update/{id}', [ServiceSubCategoryController::class, 'update']);
+    Route::post('/subservice/delete/{id}', [ServiceSubCategoryController::class, 'destroy']);
 
-//Therapist Create
-Route::get('/therapist', [TherapistController::class, 'index']);
-Route::post('/therapist/store', [TherapistController::class, 'store']);
-Route::post('/therapist/update/{id}', [TherapistController::class, 'update']);
-Route::post('/therapist/delete/{id}', [TherapistController::class, 'destroy']);
+    //Therapist Service
+    Route::get('/therapistService', [TherapistServiceController::class, 'index']);
+    Route::post('/therapistService/store', [TherapistServiceController::class, 'store']);
+    Route::post('/therapistService/update/{id}', [TherapistServiceController::class, 'update']);
+    Route::post('/therapistService/delete/{id}', [TherapistServiceController::class, 'destroy']);
 
-//Patient Create
-Route::get('/patient', [PatientController::class, 'index']);
-Route::post('/patient/store', [PatientController::class, 'store']);
-Route::post('/patient/update/{id}', [PatientController::class, 'store']);
-Route::post('/patient/delete/{id}', [PatientController::class, 'destroy']);
+    //Therapist Create
+    Route::get('/therapist', [TherapistController::class, 'index']);
+    Route::post('/therapist/store', [TherapistController::class, 'store']);
+    Route::post('/therapist/update/{id}', [TherapistController::class, 'update']);
+    Route::post('/therapist/delete/{id}', [TherapistController::class, 'destroy']);
 
-//Occupation
-Route::get('/occupation', [OccupationController::class, 'index']);
-Route::post('/occupation/store', [OccupationController::class, 'store']);
-Route::post('/occupation/update/{id}', [OccupationController::class, 'update']);
-Route::post('/occupation/delete/{id}', [OccupationController::class, 'destroy']);
+    //Patient Create
+    Route::get('/patient', [PatientController::class, 'index']);
+    Route::post('/patient/store', [PatientController::class, 'store']);
+    Route::post('/patient/update/{id}', [PatientController::class, 'store']);
+    Route::post('/patient/delete/{id}', [PatientController::class, 'destroy']);
 
-//Blood Group
-Route::get('/blood_group', [BloodGroupController::class, 'index']);
-Route::post('/blood_group/store', [BloodGroupController::class, 'store']);
-Route::post('/blood_group/update/{id}', [BloodGroupController::class, 'update']);
-Route::post('/blood_group/delete/{id}', [BloodGroupController::class, 'destroy']);
+    //Occupation
+    Route::get('/occupation', [OccupationController::class, 'index']);
+    Route::post('/occupation/store', [OccupationController::class, 'store']);
+    Route::post('/occupation/update/{id}', [OccupationController::class, 'update']);
+    Route::post('/occupation/delete/{id}', [OccupationController::class, 'destroy']);
 
-//Blood Group
-Route::get('/therapist_type', [TherapistTypeController::class, 'index']);
-Route::post('/therapist_type/store', [TherapistTypeController::class, 'store']);
-Route::post('/therapist_type/update/{id}', [TherapistTypeController::class, 'update']);
-Route::post('/therapist_type/delete/{id}', [TherapistTypeController::class, 'destroy']);
+    //Blood Group
+    Route::get('/blood_group', [BloodGroupController::class, 'index']);
+    Route::post('/blood_group/store', [BloodGroupController::class, 'store']);
+    Route::post('/blood_group/update/{id}', [BloodGroupController::class, 'update']);
+    Route::post('/blood_group/delete/{id}', [BloodGroupController::class, 'destroy']);
 
-//Ticket Department
-Route::get('/ticket_department', [TicketDepartmentController::class, 'index']);
-Route::post('/ticket_department/store', [TicketDepartmentController::class, 'store']);
-Route::post('/ticket_department/update/{id}', [TicketDepartmentController::class, 'update']);
-Route::post('/ticket_department/delete/{id}', [TicketDepartmentController::class, 'destroy']);
+    //Blood Group
+    Route::get('/therapist_type', [TherapistTypeController::class, 'index']);
+    Route::post('/therapist_type/store', [TherapistTypeController::class, 'store']);
+    Route::post('/therapist_type/update/{id}', [TherapistTypeController::class, 'update']);
+    Route::post('/therapist_type/delete/{id}', [TherapistTypeController::class, 'destroy']);
 
-//Ticket
-Route::get('/ticket', [TicketController::class, 'index']);
-Route::post('/ticket/store', [TicketController::class, 'store']);
-Route::post('/ticket/update/{id}', [TicketController::class, 'update']);
-Route::post('/ticket/delete/{id}', [TicketController::class, 'destroy']);
+    //Ticket Department
+    Route::get('/ticket_department', [TicketDepartmentController::class, 'index']);
+    Route::post('/ticket_department/store', [TicketDepartmentController::class, 'store']);
+    Route::post('/ticket_department/update/{id}', [TicketDepartmentController::class, 'update']);
+    Route::post('/ticket_department/delete/{id}', [TicketDepartmentController::class, 'destroy']);
 
-//State
-Route::get('/state', [StateController::class, 'index']);
-Route::post('/state/store', [StateController::class, 'store']);
-Route::post('/state/update/{id}', [StateController::class, 'update']);
-Route::post('/state/delete/{id}', [StateController::class, 'destroy']);
+    //Ticket
+    Route::get('/ticket', [TicketController::class, 'index']);
+    Route::post('/ticket/store', [TicketController::class, 'store']);
+    Route::post('/ticket/update/{id}', [TicketController::class, 'update']);
+    Route::post('/ticket/delete/{id}', [TicketController::class, 'destroy']);
 
-//Country
-Route::get('/country', [CountryController::class, 'index']);
-Route::post('/country/store', [CountryController::class, 'store']);
-Route::post('/country/update/{id}', [CountryController::class, 'update']);
-Route::post('/country/delete/{id}', [CountryController::class, 'destroy']);
+    //State
+    Route::get('/state', [StateController::class, 'index']);
+    Route::post('/state/store', [StateController::class, 'store']);
+    Route::post('/state/update/{id}', [StateController::class, 'update']);
+    Route::post('/state/delete/{id}', [StateController::class, 'destroy']);
 
-//Degree
-Route::get('/degree', [DegreeController::class, 'index']);
-Route::post('/degree/store', [DegreeController::class, 'store']);
-Route::post('/degree/update/{id}', [DegreeController::class, 'update']);
-Route::post('/degree/delete/{id}', [DegreeController::class, 'destroy']);
+    //Country
+    Route::get('/country', [CountryController::class, 'index']);
+    Route::post('/country/store', [CountryController::class, 'store']);
+    Route::post('/country/update/{id}', [CountryController::class, 'update']);
+    Route::post('/country/delete/{id}', [CountryController::class, 'destroy']);
 
-//Therapist Degree
-Route::get('/therapist_degree', [TherapistDegreeController::class, 'index']);
-Route::post('/therapist_degree/store', [TherapistDegreeController::class, 'store']);
-Route::post('/therapist_degree/update/{id}', [TherapistDegreeController::class, 'update']);
-Route::post('/therapist_degree/delete/{id}', [TherapistDegreeController::class, 'destroy']);
+    //Degree
+    Route::get('/degree', [DegreeController::class, 'index']);
+    Route::post('/degree/store', [DegreeController::class, 'store']);
+    Route::post('/degree/update/{id}', [DegreeController::class, 'update']);
+    Route::post('/degree/delete/{id}', [DegreeController::class, 'destroy']);
+
+    //Therapist Degree
+    Route::get('/therapist_degree', [TherapistDegreeController::class, 'index']);
+    Route::post('/therapist_degree/store', [TherapistDegreeController::class, 'store']);
+    Route::post('/therapist_degree/update/{id}', [TherapistDegreeController::class, 'update']);
+    Route::post('/therapist_degree/delete/{id}', [TherapistDegreeController::class, 'destroy']);
+
+});
