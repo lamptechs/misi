@@ -51,14 +51,14 @@ class TherapistDegreeController extends Controller
             
            if ($validator->fails()) {
     
-            $this->apiOutput($this->getValidationError($validator), 200);
+            $this->apiOutput($this->getValidationError($validator), 400);
            }
    
             $degree = new TherapistDegree();
             $degree->therapist_id = $request->therapist_id;
             $degree->degree_id = $request->degree_id;
-            $degree->created_by = 1;
-            $degree->created_at = Carbon::Now();
+            $degree->created_by = $request->user()->id ?? null;
+            // $degree->created_at = Carbon::Now();
             $degree->save();
             $this->apiSuccess();
             // $this->data = (new ServiceCategoryResource($service));
@@ -109,18 +109,16 @@ class TherapistDegreeController extends Controller
             ]
            );
             
-            if ($validator->fails()) {
-                return response()->json(
-                    [$validator->errors()],
-                    422
-                );
-            }
+           if ($validator->fails()) {
+    
+            $this->apiOutput($this->getValidationError($validator), 400);
+           }
    
             $degree = TherapistDegree::find($id);
             $degree->therapist_id = $request->therapist_id;
             $degree->degree_id = $request->degree_id;
-            $degree->updated_by = 1;
-            $degree->updated_at = Carbon::Now();
+            $degree->updated_by = $request->user()->id ?? null;
+            // $degree->updated_at = Carbon::Now();
             $degree->save();
             $this->apiSuccess();
             // $this->data = (new ServiceCategoryResource($service));

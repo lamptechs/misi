@@ -49,8 +49,8 @@ class BloodGroupController extends Controller
             $blood_group = new BloodGroup();
             $blood_group->name = $request->name;
             $blood_group->status = $request->status;
-            $blood_group->created_by = 1;
-            $blood_group->created_at = Carbon::Now();
+            $blood_group->created_by = $request->user()->id ?? null;
+            // $blood_group->created_at = Carbon::Now();
             $blood_group->save();
             $this->apiSuccess();
             $this->data = (new BloodGroupResource($blood_group));
@@ -90,18 +90,15 @@ class BloodGroupController extends Controller
             ]
            );
             
-            if ($validator->fails()) {
-                return response()->json(
-                    [$validator->errors()],
-                    422
-                );
-            }
+           if ($validator->fails()) {    
+            $this->apiOutput($this->getValidationError($validator), 200);
+           }
    
             $blood_group = BloodGroup::find($id);
             $blood_group->name = $request->name;
             $blood_group->status = $request->status;
-            $blood_group->updated_by = 1;
-            $blood_group->updated_at = Carbon::Now();
+            $blood_group->updated_by = $request->user()->id ?? null;
+            // $blood_group->updated_at = Carbon::Now();
             $blood_group->save();
             $this->apiSuccess();
             $this->data = (new BloodGroupResource($blood_group));

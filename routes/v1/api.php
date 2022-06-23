@@ -35,6 +35,7 @@ use Illuminate\Support\Facades\Route;
  */
 Route::get('admin/login', [AdminController::class, "showLogin"]);
 Route::post('admin/login', [AdminController::class, "login"]);
+Route::post('admin/logout', [AdminController::class, "logout"]);
 /**
  * Protect the Route Throw API Token
  */
@@ -136,6 +137,7 @@ Route::middleware(["auth:admin"])->group(function(){
  ***********************************************************************************/
 Route::get('therapist/login', [TherapistController::class, "showLogin"]);
 Route::post('therapist/login', [TherapistController::class, "login"]);
+Route::post('therapist/logout', [TherapistController::class, "logout"]);
 /**
  * Therapist Authentication
  */
@@ -152,6 +154,7 @@ Route::middleware(["auth:therapist"])->group(function(){
  ***********************************************************************************/
 Route::get('patient/login', [PatientController::class, "showLogin"]);
 Route::post('patient/login', [PatientController::class, "login"]);
+Route::post('patient/logout', [PatientController::class, "logout"]);
 /**
  * Patient Authentication
  */

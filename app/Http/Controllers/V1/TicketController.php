@@ -60,8 +60,8 @@ class TicketController extends Controller
             $ticket->ticket_history = $request->ticket_history ?? "";
             $ticket->remarks = $request->remarks ?? "";
             $ticket->status = $request->status;
-            $ticket->created_by = 1;
-            $ticket->created_at = Carbon::Now();
+            $ticket->created_by = $request->user()->id ?? null;
+            // $ticket->created_at = Carbon::Now();
             $ticket->save();
             $this->apiSuccess();
             $this->data = (new TicketResource($ticket));
@@ -129,8 +129,8 @@ class TicketController extends Controller
             $ticket->ticket_history = $request->ticket_history ?? "";
             $ticket->remarks = $request->remarks ?? "";
             $ticket->status = $request->status;
-            $ticket->updated_by = 1;
-            $ticket->updated_at = Carbon::Now();
+            $ticket->updated_by = $request->user()->id ?? null;
+            // $ticket->updated_at = Carbon::Now();
             $ticket->save();
             $this->apiSuccess();
             $this->data = (new TicketResource($ticket));

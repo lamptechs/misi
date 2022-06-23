@@ -44,8 +44,8 @@ class TherapistDegreeResource extends JsonResource
             "id"         => $this->id,
             "therapist"          => (new TherapistResource($this->therapist))->hide(["created_by", "updated_by"]),
             "degree"          => (new DegreeResource($this->degree))->hide(["created_by", "updated_by"]),
-            "created_by"  => $this->created_by,
-            "updated_by"  => $this->updated_by
+            "created_by"                => $this->created_by ? (new AdminResource($this->createdBy)) : null,
+            "updated_by"                => $this->updated_by ? (new AdminResource($this->updatedBy)) : null,
         ]);
     }
 }

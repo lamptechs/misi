@@ -60,7 +60,7 @@ class ServiceSubCategoryController extends Controller
             $subservice->name = $request->name;
             $subservice->status = $request->status;
             $subservice->remarks = $request->remarks ?? "";
-            $subservice->created_by = 1;
+            $subservice->created_by = $request->user()->id ?? null;
             $subservice->save();
             
             $this->apiSuccess();
@@ -108,7 +108,7 @@ class ServiceSubCategoryController extends Controller
             $subservice->name = $request->name;
             $subservice->status = $request->status;
             $subservice->remarks = $request->remarks ?? "";
-            $subservice->updated_by = 1;
+            $subservice->updated_by = $request->user()->id ?? null;
             $subservice->save();
             
             $this->apiSuccess();

@@ -13,6 +13,13 @@ class Therapist extends Model
 {
     use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
+    public function createdBy(){
+        return $this->belongsTo(Admin::class, "created_by")->withTrashed();
+    }
+    public function updatedBy(){
+        return $this->belongsTo(Admin::class, "updated_by")->withTrashed();
+    }
+    
     public function fileInfo(){
         return $this->hasOne(TherapistUpload::class, 'therapist_id');
     }

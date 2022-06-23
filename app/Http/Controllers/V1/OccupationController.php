@@ -49,14 +49,14 @@ class OccupationController extends Controller
             
            if ($validator->fails()) {
     
-            $this->apiOutput($this->getValidationError($validator), 200);
+            $this->apiOutput($this->getValidationError($validator), 400);
            }
    
             $occupation = new Ocupation();
             $occupation->name = $request->name;
             $occupation->status = $request->status;
-            $occupation->created_by = 1;
-            $occupation->created_at = Carbon::Now();
+            $occupation->created_by = $request->user()->id ?? null;
+            // $occupation->created_at = Carbon::Now();
             $occupation->save();
             $this->apiSuccess();
             $this->data = (new OccupationResource($occupation));
@@ -114,8 +114,8 @@ class OccupationController extends Controller
             $occupation = Ocupation::find($id);
             $occupation->name = $request->name;
             $occupation->status = $request->status;
-            $occupation->updated_by = 1;
-            $occupation->updated_at = Carbon::Now();
+            $occupation->updated_by =  $request->user()->id ?? null;
+            // $occupation->updated_at = Carbon::Now();
             $occupation->save();
             $this->apiSuccess();
             $this->data = (new OccupationResource($occupation));

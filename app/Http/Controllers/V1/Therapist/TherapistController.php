@@ -63,6 +63,22 @@ class TherapistController extends Controller
             return $this->apiOutput($this->getError($e), 500);
         }
     }
+    public function logout(Request $request){
+        
+        // Session::flush('access_token');
+        // // $user = $request->user();
+        // // $request->user()->access_token->delete();
+        // $this->apiSuccess("Logout Successfull");
+        // return $this->apiOutput();
+        $user = auth('sanctum')->user();
+        // 
+        foreach ($user->tokens as $token) {
+            $token->delete();
+       }
+       $this->apiSuccess("Logout Successfull");
+       return $this->apiOutput();
+   
+    }
 
     /**
      * Display a listing of the resource.
@@ -111,8 +127,8 @@ class TherapistController extends Controller
                 DB::beginTransaction();
             if( $request->id == 0 ){
                 $data = $this->getModel();
-                $data->created_by = 1;
-                $data->created_at = Carbon::Now();
+                $data->created_by = $request->user()->id;
+                // $data->created_at = Carbon::Now();
                 
              }
             //else{
@@ -145,6 +161,7 @@ class TherapistController extends Controller
             $data->blood_group_id = $request->blood_group_id;
             $data->state_id = $request->state_id;
             $data->country_id = $request->country_id;
+            $data->password = bcrypt($request->password);
             
             $data->save();
             $this->saveFileInfo($request, $data);

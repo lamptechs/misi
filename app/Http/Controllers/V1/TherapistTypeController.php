@@ -55,8 +55,8 @@ class TherapistTypeController extends Controller
             $therapist_type = new TherapistType();
             $therapist_type->name = $request->name;
             $therapist_type->status = $request->status;
-            $therapist_type->created_by = 1;
-            $therapist_type->created_at = Carbon::Now();
+            $therapist_type->created_by = $request->user()->id ?? null;
+            // $therapist_type->created_at = Carbon::Now();
             $therapist_type->save();
             $this->apiSuccess();
             $this->data = (new TherapistTypeResource($therapist_type));
@@ -104,8 +104,8 @@ class TherapistTypeController extends Controller
             $therapist_type = TherapistType::find($id);
             $therapist_type->name = $request->name;
             $therapist_type->status = $request->status;
-            $therapist_type->updated_by = 1;
-            $therapist_type->updated_at = Carbon::Now();
+            $therapist_type->updated_by = $request->user()->id ?? null;
+            // $therapist_type->updated_at = Carbon::Now();
             $therapist_type->save();
             $this->apiSuccess();
             $this->data = (new TherapistTypeResource($therapist_type));

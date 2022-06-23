@@ -52,8 +52,8 @@ class TicketDepartmentController extends Controller
             $ticket_department->name = $request->name;
             $ticket_department->status = $request->status;
             $ticket_department->remarks = $request->remarks ?? "";
-            $ticket_department->created_by = 1;
-            $ticket_department->created_at = Carbon::Now();
+            $ticket_department->created_by = $request->user()->id ?? null;
+            // $ticket_department->created_at = Carbon::Now();
             $ticket_department->save();
             $this->apiSuccess();
             $this->data = (new TicketDepartmentResource($ticket_department));
@@ -113,8 +113,8 @@ class TicketDepartmentController extends Controller
             $ticket_department->name = $request->name;
             $ticket_department->status = $request->status;
             $ticket_department->remarks = $request->remarks ?? "";
-            $ticket_department->updated_by = 1;
-            $ticket_department->updated_at = Carbon::Now();
+            $ticket_department->updated_by = $request->user()->id ?? null;
+            // $ticket_department->updated_at = Carbon::Now();
             $ticket_department->save();
             $this->apiSuccess();
             $this->data = (new TicketDepartmentResource($ticket_department));

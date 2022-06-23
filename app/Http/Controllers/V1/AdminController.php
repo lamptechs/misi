@@ -8,6 +8,9 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Auth\RequestGuard;
+use Illuminate\Support\Facades\Session;
 
 class AdminController extends Controller
 {
@@ -44,11 +47,29 @@ class AdminController extends Controller
             }
             // Issueing Access Token
             $this->access_token = $admin->createToken($request->ip() ?? "admin_access_token")->plainTextToken;
+            Session::put('access_token',$this->access_token);
+            // echo Session::get('access_token');
             $this->apiSuccess("Login Successfully");
             return $this->apiOutput();
 
         }catch(Exception $e){
             return $this->apiOutput($this->getError($e), 500);
         }
+    }
+    public function logout(Request $request){
+        
+        // Session::flush('access_token');
+        // // $user = $request->user();
+        // // $request->user()->access_token->delete();
+        // $this->apiSuccess("Logout Successfull");
+        // return $this->apiOutput();
+        $user = auth('sanctum')->user();
+        // 
+        foreach ($user->tokens as $token) {
+            $token->delete();
+       }
+       $this->apiSuccess("Logout Successfull");
+       return $this->apiOutput();
+   
     }
 }

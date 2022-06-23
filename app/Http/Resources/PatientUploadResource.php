@@ -19,7 +19,7 @@ class PatientUploadResource extends JsonResource
     /**
      * Filter Hide Items
      */
-    protected function filter($data){
+    protected function filterFields($data){
         return collect($data)->forget($this->withoutFields)->toArray();
     }
 
@@ -40,8 +40,8 @@ class PatientUploadResource extends JsonResource
             "file_type"  => $this->file_type,
             "status"                    => $this->status,
             "remarks"                   => $this->remarks,
-            "created_by"                => $this->created_by /*? (new AdminResource($this->createdBy)) : null*/,
-            "updated_by"                => $this->updated_by /*? (new AdminResource($this->updatedBy)) : null*/,
+            "created_by"                => $this->created_by ? (new AdminResource($this->createdBy)) : null,
+            "updated_by"                => $this->updated_by ? (new AdminResource($this->updatedBy)) : null,
 
         ]);
     }

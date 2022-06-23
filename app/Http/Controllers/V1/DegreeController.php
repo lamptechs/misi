@@ -49,14 +49,14 @@ class DegreeController extends Controller
             
            if ($validator->fails()) {
     
-            $this->apiOutput($this->getValidationError($validator), 200);
+            $this->apiOutput($this->getValidationError($validator), 400);
            }
    
             $degree = new Degree();
             $degree->name = $request->name;
             $degree->status = $request->status;
-            $degree->created_by = 1;
-            $degree->created_at = Carbon::Now();
+            $degree->created_by = $request->user()->id ?? null;
+            // $degree->created_at = Carbon::Now();
             $degree->save();
             $this->apiSuccess();
             $this->data = (new DegreeResource($degree));
@@ -107,18 +107,16 @@ class DegreeController extends Controller
             ]
            );
             
-            if ($validator->fails()) {
-                return response()->json(
-                    [$validator->errors()],
-                    422
-                );
-            }
+           if ($validator->fails()) {
+    
+            $this->apiOutput($this->getValidationError($validator), 400);
+           }
    
             $degree = Degree::find($id);
             $degree->name = $request->name;
             $degree->status = $request->status;
-            $degree->updated_by = 1;
-            $degree->updated_at = Carbon::Now();
+            $degree->updated_by = $request->user()->id ?? null;
+            // $degree->updated_at = Carbon::Now();
             $degree->save();
             $this->apiSuccess();
             $this->data = (new DegreeResource($degree));

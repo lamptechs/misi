@@ -15,7 +15,7 @@ trait Upload{
     /*
      * Define Directories
      */
-    protected  $advisor_image = "storage/uploads/advisor/";
+    protected  $advisor_image = "storage/uploads/patient/";
     protected  $patient_image = "storage/uploads/patient/";
     protected  $admin_profile = "storage/uploads/admin/profile";
     protected  $logo_dir = "storage/uploads/logo";

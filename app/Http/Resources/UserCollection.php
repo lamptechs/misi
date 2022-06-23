@@ -19,7 +19,7 @@ class UserCollection extends ResourceCollection
     /**
      * Filter Hide Items
      */
-    protected function filter($data){
+    protected function filterFields($data){
         return collect($data)->forget($this->withoutFields)->toArray();
     }
 

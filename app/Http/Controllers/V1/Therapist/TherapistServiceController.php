@@ -57,7 +57,7 @@ class TherapistServiceController extends Controller
             
            if ($validator->fails()) {
     
-            $this->apiOutput($this->getValidationError($validator), 200);
+            $this->apiOutput($this->getValidationError($validator), 400);
            }
    
             $therapistservice = new TherapistService();
@@ -66,8 +66,8 @@ class TherapistServiceController extends Controller
             $therapistservice->status = $request->status;
             $therapistservice->service_category_id  = $request->service_category_id ;
             $therapistservice->service_sub_category_id  = $request->service_sub_category_id ;
-            $therapistservice->created_by = 1;
-            $therapistservice->created_at = Carbon::Now();
+            $therapistservice->created_by = $request->user()->id ?? null;
+            // $therapistservice->created_at = Carbon::Now();
             $therapistservice->save();
             $this->apiSuccess();
             $this->data = (new TherapistServiceResource($therapistservice));
@@ -118,20 +118,18 @@ class TherapistServiceController extends Controller
             ]
            );
             
-            if ($validator->fails()) {
-                return response()->json(
-                    [$validator->errors()],
-                    422
-                );
-            }
+           if ($validator->fails()) {
+    
+            $this->apiOutput($this->getValidationError($validator), 400);
+           }
    
             $therapistservice = TherapistService::find($id);
             $therapistservice->name = $request->name;
             $therapistservice->status = $request->status;
             $therapistservice->service_category_id  = $request->service_category_id ;
             $therapistservice->service_sub_category_id  = $request->service_sub_category_id ;
-            $therapistservice->updated_by = 1;
-            $therapistservice->updated_at = Carbon::Now();
+            $therapistservice->updated_by = $request->user()->id ?? null;
+            // $therapistservice->updated_at = Carbon::Now();
             $therapistservice->save();
             $this->apiSuccess();
             $this->data = (new TherapistServiceResource($therapistservice));

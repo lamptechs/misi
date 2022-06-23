@@ -42,8 +42,14 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-    public $timestamps = false;
+    public function createdBy(){
+        return $this->belongsTo(Admin::class, "created_by")->withTrashed();
+    }
+    public function updatedBy(){
+        return $this->belongsTo(Admin::class, "updated_by")->withTrashed();
+    }
 
+    // protected $guarded = [];
     public function fileInfo(){
         return $this->hasMany(PatientUpload::class, 'patient_id');
     }

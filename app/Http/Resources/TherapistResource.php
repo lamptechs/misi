@@ -60,8 +60,8 @@ class TherapistResource extends JsonResource
             "country"          => (new CountryResource($this->country))->hide(["created_by", "updated_by"]),
             "state"          => (new StateResource($this->state))->hide(["created_by", "updated_by"]),
             "file_details"          => (new TherapistUploadResource($this->fileInfo))->hide(["created_by", "updated_by"]),
-            "created_by"  => $this->created_by,
-            "updated_by"  => $this->updated_by
+            "created_by"  => $this->created_by ? (new AdminResource($this->createdBy)) : null,
+            "updated_by"  => $this->updated_by ? (new AdminResource($this->updatedBy)) : null
         ]);
     }
 }

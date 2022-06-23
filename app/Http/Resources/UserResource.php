@@ -42,7 +42,7 @@ class UserResource extends JsonResource
     public function toArray($request)
     {
         return $this->filter([
-            "id"     => $this->id,
+            // "id"     => $this->id,
             "source" => $this->source,
             "first_name" => $this->first_name,
             "last_name" => $this->last_name,
@@ -68,9 +68,10 @@ class UserResource extends JsonResource
             "blood_group"          => (new BloodGroupResource($this->blood))->hide(["created_by", "updated_by"]),
             "country"          => (new CountryResource($this->country))->hide(["created_by", "updated_by"]),
             "state"          => (new StateResource($this->state))->hide(["created_by", "updated_by"]),
-            "file_details"          => (new PatientUploadResource($this->fileInfo))->hide(["created_by", "updated_by"]),
-            "created_by"  => $this->created_by,
-            "updated_by"  => $this->updated_by
+            "file_details"   => PatientUploadResource::collection($this->whenLoaded('fileInfo')),
+            // "file_details"          => (new PatientUploadResource([$this->fileInfo]))->hide(["created_by", "updated_by"]),
+            "created_by"                => $this->created_by ? (new AdminResource($this->createdBy)) : null,
+            "updated_by"                => $this->updated_by ? (new AdminResource($this->updatedBy)) : null,
         ]);
     }
 }

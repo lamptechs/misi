@@ -53,8 +53,8 @@ class TicketResource extends JsonResource
             "ticket_history"=> $this->ticket_history,
             "remarks" => $this->remarks,
             "status"  => $this->status,
-            "created_by"  => $this->created_by,
-            "updated_by"  => $this->updated_by,
+            "created_by"                => $this->created_by ? (new AdminResource($this->createdBy)) : null,
+            "updated_by"                => $this->updated_by ? (new AdminResource($this->updatedBy)) : null,
             
            
         ]);

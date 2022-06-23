@@ -64,6 +64,22 @@ class PatientController extends Controller
             return $this->apiOutput($this->getError($e), 500);
         }
     }
+    public function logout(Request $request){
+        
+        // Session::flush('access_token');
+        // // $user = $request->user();
+        // // $request->user()->access_token->delete();
+        // $this->apiSuccess("Logout Successfull");
+        // return $this->apiOutput();
+        $user = auth('sanctum')->user();
+        // 
+        foreach ($user->tokens as $token) {
+            $token->delete();
+       }
+       $this->apiSuccess("Logout Successfull");
+       return $this->apiOutput();
+   
+    }
 
     /**
      * Display a listing of the resource.
@@ -109,7 +125,8 @@ class PatientController extends Controller
 
                 DB::beginTransaction();
                 $data = $this->getModel();
-                $data->created_at = Carbon::Now();
+                // $data->created_at = Carbon::Now();
+                $data->created_by = $request->user()->id ?? null;
 
                 $data->state_id = $request->state_id;
                 $data->country_id = $request->country_id;
@@ -175,18 +192,18 @@ class PatientController extends Controller
         $data = $patient->fileInfo;
         if(empty($data)){
             $data = new PatientUpload();            
-            $data->created_by = 1;
+            $data->created_by = $request->user()->id;
         }
 
-        if( $request->hasFile('file'))
-        {
-            $fileUrl = $this->addImage($request->file);
-        }
+        // if( $request->hasFile('file'))
+        // {
+        //     $fileUrl = $this->UploadMultipleImage($request->file);
+        // }
 
 
         $data->patient_id = $patient->id;
         $data->file_name = $request->file_name ?? "Paitent Upload";
-        $data->file_url = $fileUrl;
+        $data->file_url = $this->uploadImage($request,'file',$this->advisor_image,null,null);
         $data->file_type = $request->file_type;
         $data->status = $request->status;
         $data->remarks = $request->remarks ?? '';

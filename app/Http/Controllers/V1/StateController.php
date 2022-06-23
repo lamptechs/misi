@@ -53,8 +53,8 @@ class StateController extends Controller
             $state = new State();
             $state->name = $request->name;
             $state->status = $request->status;
-            $state->created_by = 1;
-            $state->created_at = Carbon::Now();
+            $state->created_by = $request->user()->id ?? null;
+            // $state->created_at = Carbon::Now();
             $state->save();
             $this->apiSuccess();
             $this->data = (new StateResource($state));
@@ -84,18 +84,16 @@ class StateController extends Controller
                 ]
                );
                 
-                if ($validator->fails()) {
-                    return response()->json(
-                        [$validator->errors()],
-                        422
-                    );
-                }
+               if ($validator->fails()) {
+    
+                $this->apiOutput($this->getValidationError($validator), 200);
+               }
        
                 $state = State::find($id);
                 $state->name = $request->name;
                 $state->status = $request->status;
-                $state->updated_by = 1;
-                $state->updated_at = Carbon::Now();
+                $state->updated_by = $request->user()->id ?? null;
+                // $state->updated_at = Carbon::Now();
                 $state->save();
                 $this->apiSuccess();
                 $this->data = (new StateResource($state));

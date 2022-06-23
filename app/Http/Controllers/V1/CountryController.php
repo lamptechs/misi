@@ -48,13 +48,13 @@ class CountryController extends Controller
             
            if ($validator->fails()) {
     
-            $this->apiOutput($this->getValidationError($validator), 200);
+            $this->apiOutput($this->getValidationError($validator), 400);
            }
    
             $country = new Country();
             $country->name = $request->name;
             $country->status = $request->status;
-            $country->created_by = 1;
+            $country->created_by = $request->user()->id ?? null;
             $country->created_at = Carbon::Now();
             $country->save();
             $this->apiSuccess();
@@ -96,18 +96,15 @@ class CountryController extends Controller
             ]
            );
             
-            if ($validator->fails()) {
-                return response()->json(
-                    [$validator->errors()],
-                    422
-                );
-            }
+           if ($validator->fails()) {    
+            $this->apiOutput($this->getValidationError($validator), 400);
+           }
    
             $country = Country::find($id);
             $country->name = $request->name;
             $country->status = $request->status;
-            $country->updated_by	 = 1;
-            $country->updated_at	 = Carbon::Now();
+            $country->updated_by  =  $request->user()->id ?? null;
+            // $country->updated_at  = Carbon::Now();
             $country->save();
             $this->apiSuccess();
             $this->data = (new CountryResource($country));
