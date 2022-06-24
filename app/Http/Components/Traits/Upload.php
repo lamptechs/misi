@@ -16,6 +16,7 @@ trait Upload{
      * Define Directories
      */
     protected  $patient_uploads = "storage/uploads/patient/";
+    protected  $therapist_uploads = "storage/uploads/therapist/";
     protected  $admin_profile = "storage/uploads/admin/profile";
     protected  $logo_dir = "storage/uploads/logo";
     protected  $others_dir = "storage/uploads/others";
@@ -121,9 +122,9 @@ trait Upload{
     }
 
     // Upload Image
-    protected function addImage($file){
-        return Storage::disk("public")->putFile("upload", $file);
-    }
+    // protected function addImage($file){
+    //     return Storage::disk("public")->putFile("upload", $file);
+    // }
 
     
     /*

@@ -64,7 +64,7 @@ class UserResource extends JsonResource
             "occupation"        => $this->occupation,
             "remarks"           => $this->remarks,
             "image"             => $this->image,
-            "image_url"         => $this->image_url,
+            "image_url"         => asset($this->image_url),
             "blood_group"       => (new BloodGroupResource($this->blood))->hide(["created_by", "updated_by"]),
             "country"           => (new CountryResource($this->country))->hide(["created_by", "updated_by"]),
             "state"             => (new StateResource($this->state))->hide(["created_by", "updated_by"]),

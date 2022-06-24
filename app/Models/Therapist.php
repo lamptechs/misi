@@ -21,7 +21,7 @@ class Therapist extends Model
     }
     
     public function fileInfo(){
-        return $this->hasOne(TherapistUpload::class, 'therapist_id');
+        return $this->hasMany(TherapistUpload::class, 'therapist_id');
     }
 
     public function blood(){

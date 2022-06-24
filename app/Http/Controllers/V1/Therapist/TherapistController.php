@@ -104,33 +104,31 @@ class TherapistController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make(
-            $request->all(),
-            [
-                'first_name' => 'required',
-                'last_name' => 'required',
-                // 'file' => 'required'
-    
-            ]
-           );
+        try{
+            $validator = Validator::make(
+                $request->all(),
+                [
+                    'first_name' => 'required',
+                    'last_name' => 'required',
+                    "email"     => ["required", "email", "unique:therapists"],
+                    "phone"     => ["required", "numeric", "unique:therapists"]
+                ]
+               );
             
-            if ($validator->fails()) {
-                return response()->json(
-                    [$validator->errors()],
-                    422
-                );
-            }
+           if ($validator->fails()) {
+            return $this->apiOutput($this->getValidationError($validator), 400);
+           }
 
 
             try{
 
-                DB::beginTransaction();
-            if( $request->id == 0 ){
-                $data = $this->getModel();
-                $data->created_by = $request->user()->id;
-                // $data->created_at = Carbon::Now();
+            //     DB::beginTransaction();
+            // // if( $request->id == 0 ){
+            //     $data = $this->getModel();
+            //     $data->created_by = $request->user()->id;
+            //     // $data->created_at = Carbon::Now();
                 
-             }
+            //  }
             //else{
             //     $data = $this->getModel()->find($request->id);
             //     $data->modified_by = 1;
@@ -143,6 +141,10 @@ class TherapistController extends Controller
             //     $image = $request->picture->move(public_path('upload'), $imageName);
             //     $imageUrl = url('public/upload/' . $imageName);
             // }
+            DB::beginTransaction();
+            
+            $data = $this->getModel();
+            $data->created_by = $request->user()->id;
 
             $data->first_name = $request->first_name;                  
             $data->last_name = $request->last_name;         
@@ -167,53 +169,67 @@ class TherapistController extends Controller
             $this->saveFileInfo($request, $data);
             
             DB::commit();
-                    try{
-                        if($request->id == 0){
-                            event(new Registered($data));
-                        }
-                    }catch(Exception $e){
-                        //
-                    }
+                try{
+                    // event(new Registered($data));
+                }catch(Exception $e){
+                    //
+                }
             }
             catch(Exception $e){
-                
                 return $this->apiOutput($this->getError( $e), 500);
                 DB::rollBack();
             }
-            $this->apiSuccess();
+            $this->apiSuccess("Therapist Info Added Successfully");
             $this->data = (new TherapistResource($data));
-            return $this->apiOutput();
+            return $this->apiOutput();        
+            }
+            catch(Exception $e){
+            
+            return $this->apiOutput($this->getError( $e), 500);
+        };
             
     }
 
     // Save File Info
     public function saveFileInfo($request, $therapist){
-        $data = $therapist->fileInfo;
-        if(empty($data)){
-            $data = new TherapistUpload();            
-            $data->created_at = Carbon::Now();
+        // $data = $therapist->fileInfo;
+        // if(empty($data)){
+        //     $data = new TherapistUpload();            
+        //     $data->created_at = Carbon::Now();
+        // }
+        // // else{
+        // //     $data->updated_by = $request->updated_by;
+        // // }
+
+        // // if($request->file != null)
+        // // {
+        // //     // $extension = $request->file->extension();
+        // //     $id = uniqid(5);
+        // //     $fileName = $id.'.'.$request->file->extension();  
+        // //     $file = $request->file->move(public_path('upload'), $fileName);
+        // //     $fileUrl = url('public/upload/' . $fileName);
+        // // }
+
+
+        // $data->therapist_id  = $therapist->id;
+        // $data->file_name = "null";
+        // // $data->file_url = $fileUrl;
+        // // $data->file_url = /*$this->addImage($request->file)*/ "null";
+        // $data->file_url =  "null";
+
+        // $data->save();
+        $file_path = $this->uploadImage($request, 'file', $this->therapist_uploads, 720);
+  
+        if( !is_array($file_path) ){
+            $file_path = (array) $file_path;
         }
-        // else{
-        //     $data->updated_by = $request->updated_by;
-        // }
-
-        // if($request->file != null)
-        // {
-        //     // $extension = $request->file->extension();
-        //     $id = uniqid(5);
-        //     $fileName = $id.'.'.$request->file->extension();  
-        //     $file = $request->file->move(public_path('upload'), $fileName);
-        //     $fileUrl = url('public/upload/' . $fileName);
-        // }
-
-
-        $data->therapist_id  = $therapist->id;
-        $data->file_name = "null";
-        // $data->file_url = $fileUrl;
-        // $data->file_url = /*$this->addImage($request->file)*/ "null";
-        $data->file_url =  "null";
-
-        $data->save();
+        foreach($file_path as $path){
+            $data = new TherapistUpload();
+            $data->therapist_id = $therapist->id;
+            $data->file_name    = $request->file_name ?? "Therapist Upload";
+            $data->file_url     = $path;
+            $data->save();
+        }
        
     }
 

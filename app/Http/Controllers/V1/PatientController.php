@@ -155,7 +155,7 @@ class PatientController extends Controller
                 $data->remarks = $request->remarks ?? '';
                 $data->password = bcrypt($request->password);
                 if($request->hasFile('picture')){
-                    $data->image_url = $this->addImage($request->picture);
+                    $data->image_url = $this->uploadImage($request, 'picture', $this->patient_uploads, 720);
                 }
                 $data->save();
                 $this->saveFileInfo($request, $data);
@@ -173,7 +173,9 @@ class PatientController extends Controller
             }
             $this->apiSuccess("Patient Info Added Successfully");
             $this->data = (new UserResource($data));
-            return $this->apiOutput();        }catch(Exception $e){
+            return $this->apiOutput();        
+            }
+            catch(Exception $e){
             
             return $this->apiOutput($this->getError( $e), 500);
         }
