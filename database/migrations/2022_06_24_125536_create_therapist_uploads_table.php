@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('therapist_uploads', function (Blueprint $table) {
             $table->id();
-            $table->foreignId("therapist_id")->nullable()->references("id")->on('therapists');
+            $table->foreignId("therapist_id")->nullable()->references("id")->on('therapists')->cascadeOnDelete();;
             $table->string("file_name");
             $table->string("file_url");
             $table->timestamps();
