@@ -112,8 +112,8 @@ class PatientController extends Controller
             [
                 'first_name' => 'required',
                 'last_name' => 'required',
-                // 'picture' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:10240',
-                // 'file' => 'required'
+                "email"     => ["required", "email", "unique:users"],
+                "phone"     => ["required", "numeric", "unique:users"]
             ]
            );
             
@@ -125,7 +125,6 @@ class PatientController extends Controller
 
                 DB::beginTransaction();
                 $data = $this->getModel();
-                // $data->created_at = Carbon::Now();
                 $data->created_by = $request->user()->id ?? null;
 
                 $data->state_id = $request->state_id;
@@ -161,23 +160,20 @@ class PatientController extends Controller
                 $data->save();
                 $this->saveFileInfo($request, $data);
             
-            DB::commit();
-                    try{
-                        if($request->id == 0){
-                            event(new Registered($data));
-                        }
-                    }catch(Exception $e){
-                        //
-                    }
+                DB::commit();
+                try{
+                    // event(new Registered($data));
+                }catch(Exception $e){
+                    //
+                }
             }
             catch(Exception $e){
                 return $this->apiOutput($this->getError( $e), 500);
                 DB::rollBack();
             }
-            $this->apiSuccess();
+            $this->apiSuccess("Patient Info Added Successfully");
             $this->data = (new UserResource($data));
-            return $this->apiOutput();
-        }catch(Exception $e){
+            return $this->apiOutput();        }catch(Exception $e){
             
             return $this->apiOutput($this->getError( $e), 500);
         }
@@ -189,27 +185,22 @@ class PatientController extends Controller
      * Save File Info
      */
     public function saveFileInfo($request, $patient){
-        $data = $patient->fileInfo;
-        if(empty($data)){
-            $data = new PatientUpload();            
-            $data->created_by = $request->user()->id;
+        $file_path = $this->uploadImage($request, 'file', $this->patient_uploads, 720);
+  
+        if( !is_array($file_path) ){
+            $file_path = (array) $file_path;
         }
-
-        // if( $request->hasFile('file'))
-        // {
-        //     $fileUrl = $this->UploadMultipleImage($request->file);
-        // }
-
-
-        $data->patient_id = $patient->id;
-        $data->file_name = $request->file_name ?? "Paitent Upload";
-        $data->file_url = $this->uploadImage($request,'file',$this->advisor_image,null,null);
-        $data->file_type = $request->file_type;
-        $data->status = $request->status;
-        $data->remarks = $request->remarks ?? '';
-       
-        $data->save();
-       
+        foreach($file_path as $path){
+            $data = new PatientUpload();
+            $data->created_by   = $request->user()->id;
+            $data->patient_id   = $patient->id;
+            $data->file_name    = $request->file_name ?? "Paitent Upload";
+            $data->file_url     = $path;
+            $data->file_type    = $request->file_type;
+            $data->status       = $request->status;
+            $data->remarks      = $request->remarks ?? '';
+            $data->save();
+        }
     }
 
     /**

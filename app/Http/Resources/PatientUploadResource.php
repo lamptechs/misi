@@ -36,12 +36,12 @@ class PatientUploadResource extends JsonResource
             "id" => $this->id,
             "patient_id" => $this->patient_id,
             "file_name"  => $this->file_name,
-            "file_url"   => $this->file_url,
+            "file_url"   => asset($this->file_url),
             "file_type"  => $this->file_type,
-            "status"                    => $this->status,
-            "remarks"                   => $this->remarks,
-            "created_by"                => $this->created_by ? (new AdminResource($this->createdBy)) : null,
-            "updated_by"                => $this->updated_by ? (new AdminResource($this->updatedBy)) : null,
+            "status"     => $this->status,
+            "remarks"    => $this->remarks,
+            "created_by" => $this->created_by ? (new AdminResource($this->createdBy)) : null,
+            "updated_by" => $this->updated_by ? (new AdminResource($this->updatedBy)) : null,
 
         ]);
     }
