@@ -21,7 +21,8 @@ class OccupationController extends Controller
     {
         try{
             $this->data = OccupationResource::collection(Ocupation::all());
-            return $this->apiOutput("Occupation Loaded Successfully");
+            $this->apiSuccess("Occupation Loaded Successfully");
+            return $this->apiOutput();
 
         }catch(Exception $e){
             return $this->apiOutput($this->getError($e), 500);

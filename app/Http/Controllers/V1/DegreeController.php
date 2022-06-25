@@ -21,7 +21,8 @@ class DegreeController extends Controller
     {
         try{
             $this->data = DegreeResource::collection(Degree::all());
-            return $this->apiOutput("Degree Loaded Successfully");
+            $this->apiSuccess("Degree Loaded Successfully");
+            return $this->apiOutput();
 
         }catch(Exception $e){
             return $this->apiOutput($this->getError($e), 500);

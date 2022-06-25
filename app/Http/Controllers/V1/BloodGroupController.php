@@ -20,7 +20,8 @@ class BloodGroupController extends Controller
     {
         try{
             $this->data = BloodGroupResource::collection(BloodGroup::all());
-            return $this->apiOutput("Blood Group Loaded Successfully");
+            $this->apiSuccess("Blood Group Loaded Successfully");
+            return $this->apiOutput();
 
         }catch(Exception $e){
             return $this->apiOutput($this->getError($e), 500);

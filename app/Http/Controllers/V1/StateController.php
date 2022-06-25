@@ -21,7 +21,8 @@ class StateController extends Controller
     {
         try{
             $this->data = StateResource::collection(State::all());
-            return $this->apiOutput("State Loaded Successfully");
+            $this->apiSuccess("State Loaded Successfully");
+            return $this->apiOutput();
 
         }catch(Exception $e){
             return $this->apiOutput($this->getError($e), 500);

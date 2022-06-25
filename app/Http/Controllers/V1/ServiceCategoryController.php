@@ -16,7 +16,8 @@ class ServiceCategoryController extends Controller
     public function index(){
         try{
             $this->data = ServiceCategoryResource::collection(ServiceCategory::all());
-            return $this->apiOutput("Service Category Loaded Successfully");
+            $this->apiSuccess("Service Category Loaded Successfully");
+            return $this->apiOutput();
 
         }catch(Exception $e){
             return $this->apiOutput($this->getError($e), 500);

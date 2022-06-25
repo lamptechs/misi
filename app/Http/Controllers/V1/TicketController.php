@@ -21,7 +21,8 @@ class TicketController extends Controller
     {
         try{
             $this->data = TicketResource::collection(Ticket::all());
-            return $this->apiOutput("Ticket Loaded Successfully");
+            $this->apiSuccess("Ticket Loaded Successfully");
+            return $this->apiOutput();
 
         }catch(Exception $e){
             return $this->apiOutput($this->getError($e), 500);

@@ -21,7 +21,8 @@ class TherapistTypeController extends Controller
     {
         try{
             $this->data = TherapistTypeResource::collection(TherapistType::all());
-            return $this->apiOutput("Therapist Type Loaded Successfully");
+            $this->apiSuccess("Therapist Type Loaded Successfully");
+            return $this->apiOutput();
 
         }catch(Exception $e){
             return $this->apiOutput($this->getError($e), 500);

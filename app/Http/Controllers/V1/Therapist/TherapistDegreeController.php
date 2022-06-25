@@ -22,7 +22,8 @@ class TherapistDegreeController extends Controller
     {
         try{
             $this->data = TherapistDegreeResource::collection(TherapistDegree::all());
-            return $this->apiOutput("Therapist Degree Loaded Successfully");
+            $this->apiSuccess("Therapist Degree Loaded Successfully");
+            return $this->apiOutput();
 
         }catch(Exception $e){
             return $this->apiOutput($this->getError($e), 500);
@@ -40,14 +41,9 @@ class TherapistDegreeController extends Controller
     {
 
         try{
-        $validator = Validator::make(
-            $request->all(),
-            [
-                'name' => 'required|min:2',
-                'remarks' => 'nullable|min:4'
-    
-            ]
-           );
+        $validator = Validator::make($request->all(),[
+                'name' => ["required","min:2"],
+            ]);
             
            if ($validator->fails()) {
     
@@ -61,7 +57,7 @@ class TherapistDegreeController extends Controller
             // $degree->created_at = Carbon::Now();
             $degree->save();
             $this->apiSuccess();
-            // $this->data = (new ServiceCategoryResource($service));
+            $this->data = (new TherapistDegreeResource($degree));
             return $this->apiOutput();
         }catch(Exception $e){
             return $this->apiOutput($this->getError( $e), 500);
@@ -121,7 +117,7 @@ class TherapistDegreeController extends Controller
             // $degree->updated_at = Carbon::Now();
             $degree->save();
             $this->apiSuccess();
-            // $this->data = (new ServiceCategoryResource($service));
+            $this->data = (new TherapistDegreeResource($degree));
             return $this->apiOutput();
         }catch(Exception $e){
             return $this->apiOutput($this->getError( $e), 500);

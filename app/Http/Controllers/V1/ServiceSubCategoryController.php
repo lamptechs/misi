@@ -25,7 +25,8 @@ class ServiceSubCategoryController extends Controller
         try{
             
             $this->data = ServiceSubCategoryResource::collection(ServiceSubCategory::all());
-            return $this->apiOutput("Service SubCategory Loaded Successfully");
+            $this->apiSuccess("Service SubCategory Loaded Successfully");
+            return $this->apiOutput();
 
         }catch(Exception $e){
             return $this->apiOutput($this->getError($e), 500);

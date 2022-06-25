@@ -21,7 +21,8 @@ class CountryController extends Controller
     {
         try{
             $this->data = CountryResource::collection(Country::all());
-            return $this->apiOutput("Country Loaded Successfully");
+            $this->apiSuccess("Country Loaded Successfully");
+            return $this->apiOutput();
 
         }catch(Exception $e){
             return $this->apiOutput($this->getError($e), 500);

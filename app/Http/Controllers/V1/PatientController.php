@@ -90,7 +90,8 @@ class PatientController extends Controller
     {
         try{
             $this->data = UserResource::collection(User::all());
-            return $this->apiOutput("Patient Loaded Successfully");
+            $this->apiSuccess("Patient Loaded Successfully");
+            return $this->apiOutput();
 
         }catch(Exception $e){
             return $this->apiOutput($this->getError($e), 500);

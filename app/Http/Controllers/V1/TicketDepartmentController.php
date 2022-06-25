@@ -21,7 +21,8 @@ class TicketDepartmentController extends Controller
     {
         try{
             $this->data = TicketDepartmentResource::collection(TicketDepartment::all());
-            return $this->apiOutput("Ticket Department Type Loaded Successfully");
+            $this->apiSuccess("Ticket Department Type Loaded Successfully");
+            return $this->apiOutput();
 
         }catch(Exception $e){
             return $this->apiOutput($this->getError($e), 500);

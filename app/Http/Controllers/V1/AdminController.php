@@ -23,7 +23,7 @@ class AdminController extends Controller
             "password"  => "required",
         ];
         $this->apiSuccess("This credentials are required for Login ");
-        return $this->apiOutput();
+        return $this->apiOutput(200);
     }
 
     /**
