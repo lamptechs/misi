@@ -68,7 +68,7 @@ Route::middleware(["auth:admin"])->group(function(){
     //Patient Create
     Route::get('/patient', [PatientController::class, 'index']);
     Route::post('/patient/store', [PatientController::class, 'store']);
-    Route::post('/patient/update/{id}', [PatientController::class, 'store']);
+    Route::post('/patient/update/{id}', [PatientController::class, 'update']);
     Route::post('/patient/delete/{id}', [PatientController::class, 'destroy']);
 
     //Occupation

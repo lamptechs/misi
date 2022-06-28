@@ -13,6 +13,7 @@ use Illuminate\Auth\Events\Registered;
 use Exception;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 
 class PatientController extends Controller
 {
@@ -113,8 +114,8 @@ class PatientController extends Controller
             [
                 'first_name' => 'required',
                 'last_name' => 'required',
-                "email"     => ["required", "email", "unique:users"],
-                "phone"     => ["required", "numeric", "unique:users"]
+                "email"     => ["required", "email",/* "unique:users",*/Rule::unique('users', 'email')->ignore($request->id)],
+                "phone"     => ["required", "numeric",/* "unique:users"*/Rule::unique('users', 'phone')->ignore($request->id)]
             ]
            );
             
@@ -156,11 +157,13 @@ class PatientController extends Controller
                 $data->remarks = $request->remarks ?? '';
                 $data->password = bcrypt($request->password);
                 if($request->hasFile('picture')){
-                    $data->image_url = $this->uploadImage($request, 'picture', $this->patient_uploads, 720);
+                    $data->image_url = $this->uploadImage($request, 'picture', $this->patient_uploads, null,null,$data->image_url);
                 }
+
                 $data->save();
                 $this->saveFileInfo($request, $data);
-            
+                   
+                
                 DB::commit();
                 try{
                     // event(new Registered($data));
@@ -174,7 +177,8 @@ class PatientController extends Controller
             }
             $this->apiSuccess("Patient Info Added Successfully");
             $this->data = (new UserResource($data));
-            return $this->apiOutput();        
+            return $this->apiOutput(); 
+                   
             }
             catch(Exception $e){
             
@@ -188,22 +192,50 @@ class PatientController extends Controller
      * Save File Info
      */
     public function saveFileInfo($request, $patient){
-        $file_path = $this->uploadImage($request, 'file', $this->patient_uploads, 720);
-  
+
+        $file_path = $this->uploadImage($request, 'file', $this->patient_uploads,720);
+      
+          
         if( !is_array($file_path) ){
             $file_path = (array) $file_path;
         }
         foreach($file_path as $path){
-            $data = new PatientUpload();
-            $data->created_by   = $request->user()->id;
+
+                $data = new PatientUpload();
+                $data->created_by   = $request->user()->id;
+                $data->patient_id   = $patient->id;
+                $data->file_name    = $request->file_name ?? "Paitent Upload";
+                $data->file_url     = $path;
+                $data->file_type    = $request->file_type;
+                $data->status       = $request->status;
+                $data->remarks      = $request->remarks ?? '';
+                $data->save();
+
+            }
+      
+    }
+
+    //Update Image
+    public function updateFileInfo($request, $patient){
+    
+            $data = PatientUpload::find($request->ids);
+            $data->updated_by   = $request->user()->id;
             $data->patient_id   = $patient->id;
-            $data->file_name    = $request->file_name ?? "Paitent Upload";
-            $data->file_url     = $path;
+            $data->file_name    = $request->file_name ?? "Paitent Upload updated";
+            $data->file_url     = $this->uploadImage($request, 'file', $this->patient_uploads,null,null,$data->file_url);
             $data->file_type    = $request->file_type;
             $data->status       = $request->status;
             $data->remarks      = $request->remarks ?? '';
             $data->save();
-        }
+  
+            
+        
+
+               
+            
+
+         
+        
     }
 
     /**
@@ -227,7 +259,84 @@ class PatientController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try{
+            $validator = Validator::make(
+                $request->all(),
+                [
+                    'first_name' => 'required',
+                    'last_name' => 'required',
+                    "email"     => ["required", "email",/* "unique:users",*/Rule::unique('users', 'email')->ignore($request->id)],
+                    "phone"     => ["required", "numeric",/* "unique:users"*/Rule::unique('users', 'phone')->ignore($request->id)]
+                ]
+               );
+                
+                if ($validator->fails()) {
+                    return $this->apiOutput($this->getValidationError($validator), 400);
+                }
+    
+                try{
+    
+                    DB::beginTransaction();
+                    $data = $this->getModel()->find($request->id);
+                    $data->updated_by = $request->user()->id ?? null;
+                    
+    
+                    $data->state_id = $request->state_id;
+                    $data->country_id = $request->country_id;
+                    $data->blood_group_id = $request->blood_group_id;
+                    $data->source = $request->source;
+                    $data->first_name = $request->first_name;                  
+                    $data->last_name = $request->last_name;
+                    // $data->patient_picture_name = $imageName;            
+                    // $data->patient_picture_location = $imageUrl;            
+                    $data->email = $request->email;
+                    $data->phone = $request->phone;
+                    $data->alternet_phone = $request->alternet_phone ?? 0;
+                    // $data->password = !empty($request->password) ? bcrypt($request->password) : $data->password;
+                    $data->address = $request->address;
+                    $data->area = $request->area;
+                    $data->city = $request->city;
+                    $data->bsn_number = $request->bsn_number;
+                    $data->dob_number = $request->dob_number;
+                    $data->insurance_number = $request->insurance_number;
+                    $data->emergency_contact = $request->emergency_contact ?? 0;
+                    $data->age = $request->age;
+                    $data->gender = $request->gender;
+                    $data->marital_status = $request->marital_status;
+                    $data->medical_history = $request->medical_history;
+                    $data->date_of_birth = Carbon::now();
+                    $data->occupation = $request->occupation;
+                    $data->remarks = $request->remarks ?? '';
+                    $data->password = bcrypt($request->password);
+                    if($request->hasFile('picture')){
+                        $data->image_url = $this->uploadImage($request, 'picture', $this->patient_uploads, null,null,$data->image_url);
+                    }
+    
+                    $data->save();
+                    $this->updateFileInfo($request, $data);
+                        
+                    
+                
+                    DB::commit();
+                    try{
+                        // event(new Registered($data));
+                    }catch(Exception $e){
+                        //
+                    }
+                }
+                catch(Exception $e){
+                    return $this->apiOutput($this->getError( $e), 500);
+                    DB::rollBack();
+                }
+                $this->apiSuccess("Patient Info Updated Successfully");
+                $this->data = (new UserResource($data));
+                return $this->apiOutput(); 
+                       
+                }
+                catch(Exception $e){
+                
+                return $this->apiOutput($this->getError( $e), 500);
+            }
     }
 
     /**
