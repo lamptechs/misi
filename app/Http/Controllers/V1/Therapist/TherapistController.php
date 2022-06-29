@@ -232,7 +232,7 @@ class TherapistController extends Controller
 
                     DB::beginTransaction();
                     
-                    $data = $this->getModel();
+                    $data = $this->getModel()->find($request->id);
                     $data->updated_by = $request->user()->id;
 
                     $data->first_name = $request->first_name;                  
