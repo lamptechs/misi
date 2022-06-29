@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\V1\AdminController;
+use App\Http\Controllers\V1\AppointmentController;
 use App\Http\Controllers\V1\Therapist\TherapistController;
 use App\Http\Controllers\V1\Therapist\TherapistDegreeController;
 use App\Http\Controllers\V1\Therapist\TherapistServiceController;
@@ -15,6 +16,7 @@ use App\Http\Controllers\V1\TherapistTypeController;
 use App\Http\Controllers\V1\TicketDepartmentController;
 use App\Http\Controllers\V1\TicketController;
 use App\Http\Controllers\V1\DegreeController;
+use App\Http\Controllers\V1\Therapist\TherapistScheduleController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -124,6 +126,18 @@ Route::middleware(["auth:admin"])->group(function(){
     Route::post('/therapist_degree/store', [TherapistDegreeController::class, 'store']);
     Route::post('/therapist_degree/update/{id}', [TherapistDegreeController::class, 'update']);
     Route::post('/therapist_degree/delete/{id}', [TherapistDegreeController::class, 'destroy']);
+
+    //Therapist Schedule
+    Route::get('/therapist_schedule', [TherapistScheduleController::class, 'index']);
+    // Route::post('/therapist_schedule/store', [TherapistScheduleController::class, 'store']);
+    // Route::post('/therapist_schedule/update/{id}', [TherapistScheduleController::class, 'update']);
+    // Route::post('/therapist_schedule/delete/{id}', [TherapistScheduleController::class, 'destroy']);
+    
+    //Appointment
+    Route::get('/appointment', [AppointmentController::class, 'index']);
+    Route::post('/appointment/store', [AppointmentController::class, 'store']);
+    Route::post('/appointment/update/{id}', [AppointmentController::class, 'update']);
+    Route::post('/appointment/delete/{id}', [AppointmentController::class, 'destroy']);
 
 });
 

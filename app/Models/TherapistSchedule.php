@@ -14,4 +14,7 @@ class TherapistSchedule extends Model
     public function updatedBy(){
         return $this->belongsTo(Admin::class, "updated_by")->withTrashed();
     }
+    public function therapist(){
+        return $this->belongsTo(Therapist::class, 'therapist_id'); 
+    }
 }
