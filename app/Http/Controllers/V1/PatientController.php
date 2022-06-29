@@ -215,26 +215,19 @@ class PatientController extends Controller
       
     }
 
-    //Update Image
+    //Update File Info
     public function updateFileInfo($request, $patient){
     
             $data = PatientUpload::find($request->ids);
             $data->updated_by   = $request->user()->id;
             $data->patient_id   = $patient->id;
-            $data->file_name    = $request->file_name ?? "Paitent Upload updated";
+            $data->file_name    = $request->file_name ?? "Therapist Upload updated";
             $data->file_url     = $this->uploadImage($request, 'file', $this->patient_uploads,null,null,$data->file_url);
             $data->file_type    = $request->file_type;
             $data->status       = $request->status;
             $data->remarks      = $request->remarks ?? '';
             $data->save();
   
-            
-        
-
-               
-            
-
-         
         
     }
 
