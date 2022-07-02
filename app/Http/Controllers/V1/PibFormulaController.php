@@ -62,17 +62,20 @@ class PibFormulaController extends Controller
         
                 $this->apiOutput($this->getValidationError($validator), 200);
                }
-       
-                $formula = new PibFormula();
-                $formula->name = $request->name;
-                $formula->patient_id = $request->patient_id;
-                $formula->type = $request->type;
-                $formula->number = $request->number;
-                $formula->expiration_date = /*$request->expiration_date*/ Carbon::now();
-                $formula->question_id = $request->question_id;
-                $formula->created_by = $request->user()->id ?? null;
-                $formula->save();
-                $this->saveScale($request,$formula);
+           
+                foreach($request->question as $question){
+                    $formula = new PibFormula();
+                    $formula->name = $request->name;
+                    $formula->patient_id = $request->patient_id;
+                    $formula->type = $request->type;
+                    $formula->number = $request->number;
+                    $formula->expiration_date = /*$request->expiration_date*/ Carbon::now();
+                    // $formula->question_id = $request->question_id;
+                    $formula->question_id = $question;
+                    $formula->created_by = $request->user()->id ?? null;
+                    $formula->save();
+                }
+                // $this->saveScale($request,$formula);
 
                 $this->apiSuccess();
                 $this->data = (new PibFormulaResource($formula));
@@ -82,28 +85,28 @@ class PibFormulaController extends Controller
             }
     }
 
-    /**
-     * Save File Info
-     */
-    public function saveScale($request, $formula){
+    // /**
+    //  * Save File Info
+    //  */
+    // public function saveScale($request, $formula){
 
-        // if( !is_array($formula->question_id) ){
-            $questions = (array) $formula->question_id;
-            // $scales = (array) $request->scale;
-        // }
-        foreach($questions as $question){
-        // foreach($scales as $scale){
-            $data = new Scale();
-            $data->scale = $request->scale;
-            $data->pib_id = $formula->id;
-            $data->patient_id = $formula->patient_id;
-            $data->question_id = $question;
-            // $data->question_id = $formula->question_id;
-            $data->save();     
-        // } 
-      } 
+    //     // if( !is_array($formula->question_id) ){
+    //         $questions = (array) $formula->question_id;
+    //         // $scales = (array) $request->scale;
+    //     // }
+    //     foreach($questions as $question){
+    //     // foreach($scales as $scale){
+    //         $data = new Scale();
+    //         $data->scale = $request->scale;
+    //         $data->pib_id = $formula->id;
+    //         $data->patient_id = $formula->patient_id;
+    //         // $data->question_id = $question;
+    //         // $data->question_id = $formula->question_id;
+    //         $data->save();     
+    //     // } 
+    //   } 
       
-    }
+    // }
 
     /**
      * Display the specified resource.
