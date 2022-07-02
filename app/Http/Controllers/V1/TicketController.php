@@ -118,7 +118,7 @@ class TicketController extends Controller
             $this->apiOutput($this->getValidationError($validator), 200);
            }
    
-            $ticket = TicketDepartment::find($id);
+            $ticket = Ticket::find($id);
             $ticket->patient_id = $request->patient_id;
             $ticket->therapist_id = $request->therapist_id;
             $ticket->ticket_department_id = $request->ticket_department_id;
