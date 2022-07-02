@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class TicketDepartmentResource extends JsonResource
+class ScaleResource extends JsonResource
 {
     protected $withoutFields = [];
 
@@ -19,7 +19,7 @@ class TicketDepartmentResource extends JsonResource
     /**
      * Filter Hide Items
      */
-    protected function filter($data){
+    protected function filterFields($data){
         return collect($data)->forget($this->withoutFields)->toArray();
     }
 
@@ -32,13 +32,9 @@ class TicketDepartmentResource extends JsonResource
     public function toArray($request)
     {
         return $this->filter([
-
-            "id"   => $this->id,
-            "name" => $this->name,
-            "status"                    => $this->status,
-            "remarks"                   => $this->remarks,
-            "created_by"                => $this->created_by ? (new AdminResource($this->createdBy)) : null,
-            "updated_by"                => $this->updated_by ? (new AdminResource($this->updatedBy)) : null
+           
+            "question"          => (new QuestionResource($this->question))->hide(["created_by", "updated_by"]),
+            "scale" => $this->scale
 
         ]);
     }

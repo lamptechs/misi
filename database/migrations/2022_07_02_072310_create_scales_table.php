@@ -13,11 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('therapist_uploads', function (Blueprint $table) {
+        Schema::create('scales', function (Blueprint $table) {
             $table->id();
-            $table->foreignId("therapist_id")->nullable()->references("id")->on('therapists')->cascadeOnDelete();
-            $table->string("file_name");
-            $table->string("file_url");
+            $table->string('scale')->nullable();
+            $table->foreignId("pib_id")->nullable()->references("id")->on('pib_formulas');
+            $table->foreignId("question_id")->nullable()->references("id")->on('questions');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('therapist_uploads');
+        Schema::dropIfExists('scales');
     }
 };

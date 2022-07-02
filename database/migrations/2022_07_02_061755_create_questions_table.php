@@ -13,11 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('therapist_uploads', function (Blueprint $table) {
+        Schema::create('questions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId("therapist_id")->nullable()->references("id")->on('therapists')->cascadeOnDelete();
-            $table->string("file_name");
-            $table->string("file_url");
+            $table->longText('question')->nullable();
+            $table->string('scale')->nullable();
+            $table->unsignedBigInteger("created_by")->nullable();
+            $table->unsignedBigInteger("updated_by")->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -30,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('therapist_uploads');
+        Schema::dropIfExists('questions');
     }
 };

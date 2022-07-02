@@ -239,7 +239,15 @@ class PatientController extends Controller
      */
     public function show($id)
     {
-        //
+        try{
+            // $patient = $this->getModel()->find($id);
+            $this->data = (new UserResource(User::find($id)));
+            $this->apiSuccess("Patient Showed Successfully");
+            return $this->apiOutput();
+
+        }catch(Exception $e){
+            return $this->apiOutput($this->getError($e), 500);
+        }
     }
 
 

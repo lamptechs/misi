@@ -2,9 +2,9 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class TicketDepartmentResource extends JsonResource
+class PibFormulaCollection extends ResourceCollection
 {
     protected $withoutFields = [];
 
@@ -24,6 +24,15 @@ class TicketDepartmentResource extends JsonResource
     }
 
     /**
+     * Process The Collection
+     */
+    protected function processCollection($request){
+        return $this->collection->map(function (PibFormulaResource $resource) use ($request) {
+            return $resource->hide($this->withoutFields)->toArray($request);
+        })->all();
+    }
+
+    /**
      * Transform the resource into an array.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -31,15 +40,6 @@ class TicketDepartmentResource extends JsonResource
      */
     public function toArray($request)
     {
-        return $this->filter([
-
-            "id"   => $this->id,
-            "name" => $this->name,
-            "status"                    => $this->status,
-            "remarks"                   => $this->remarks,
-            "created_by"                => $this->created_by ? (new AdminResource($this->createdBy)) : null,
-            "updated_by"                => $this->updated_by ? (new AdminResource($this->updatedBy)) : null
-
-        ]);
+        return $this->processCollection($request);
     }
 }

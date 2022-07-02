@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class TicketDepartmentResource extends JsonResource
+class QuestionResource extends JsonResource
 {
     protected $withoutFields = [];
 
@@ -33,12 +33,10 @@ class TicketDepartmentResource extends JsonResource
     {
         return $this->filter([
 
-            "id"   => $this->id,
-            "name" => $this->name,
-            "status"                    => $this->status,
-            "remarks"                   => $this->remarks,
+            "question" => $this->question,
+            // "scale"                    => $this->scale,
             "created_by"                => $this->created_by ? (new AdminResource($this->createdBy)) : null,
-            "updated_by"                => $this->updated_by ? (new AdminResource($this->updatedBy)) : null
+            "updated_by"                => $this->updated_by ? (new AdminResource($this->updatedBy)) : null,
 
         ]);
     }

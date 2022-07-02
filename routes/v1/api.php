@@ -17,6 +17,9 @@ use App\Http\Controllers\V1\TherapistTypeController;
 use App\Http\Controllers\V1\TicketDepartmentController;
 use App\Http\Controllers\V1\TicketController;
 use App\Http\Controllers\V1\DegreeController;
+use App\Http\Controllers\v1\PibController;
+use App\Http\Controllers\v1\PibFormulaController;
+use App\Http\Controllers\v1\QuestionController;
 use App\Http\Controllers\V1\Therapist\TherapistScheduleController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -70,6 +73,7 @@ Route::middleware(["auth:admin"])->group(function(){
 
     //Patient Create
     Route::get('/patient', [PatientController::class, 'index']);
+    Route::get('/patient/show/{id}', [PatientController::class, 'show']);
     Route::post('/patient/store', [PatientController::class, 'store']);
     Route::post('/patient/update/{id}', [PatientController::class, 'update']);
     Route::post('/patient/delete/{id}', [PatientController::class, 'destroy']);
@@ -139,6 +143,18 @@ Route::middleware(["auth:admin"])->group(function(){
     Route::post('/appointment/store', [AppointmentController::class, 'store']);
     Route::post('/appointment/update/{id}', [AppointmentController::class, 'update']);
     Route::post('/appointment/delete/{id}', [AppointmentController::class, 'destroy']);
+
+    //Question
+    Route::get('/question', [QuestionController::class, 'index']);
+    Route::post('/question/store', [QuestionController::class, 'store']);
+    // Route::post('/appointment/update/{id}', [AppointmentController::class, 'update']);
+    // Route::post('/appointment/delete/{id}', [AppointmentController::class, 'destroy']);
+
+    //Pib Formula
+    Route::get('/formula', [PibFormulaController::class, 'index']);
+    Route::post('/formula/store', [PibFormulaController::class, 'store']);
+    // Route::post('/appointment/update/{id}', [AppointmentController::class, 'update']);
+    // Route::post('/appointment/delete/{id}', [AppointmentController::class, 'destroy']);
 
 });
 
