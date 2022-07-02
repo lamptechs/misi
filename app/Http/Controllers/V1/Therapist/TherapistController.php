@@ -300,8 +300,8 @@ class TherapistController extends Controller
     {
         try{
             $data = $this->getModel()->find($id);
+            TherapistUpload::where('therapist_id',$data->id)->delete();
             $data->delete();
-            // Therapist::destroy($id);
             $this->apiSuccess();
             return $this->apiOutput("Therapist Deleted Successfully", 200);
         }catch(Exception $e){

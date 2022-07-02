@@ -342,6 +342,7 @@ class PatientController extends Controller
     {
         try{
             $data = $this->getModel()->find($id);
+            PatientUpload::where('patient_id',$data->id)->delete();
             $data->delete();
             $this->apiSuccess();
             return $this->apiOutput("Patient Deleted Successfully", 200);
