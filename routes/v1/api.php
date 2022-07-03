@@ -20,6 +20,7 @@ use App\Http\Controllers\V1\DegreeController;
 use App\Http\Controllers\v1\PibController;
 use App\Http\Controllers\v1\PibFormulaController;
 use App\Http\Controllers\v1\QuestionController;
+use App\Http\Controllers\v1\QuestionScaleController;
 use App\Http\Controllers\V1\Therapist\TherapistScheduleController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -147,6 +148,12 @@ Route::middleware(["auth:admin"])->group(function(){
     //Question
     Route::get('/question', [QuestionController::class, 'index']);
     Route::post('/question/store', [QuestionController::class, 'store']);
+    // Route::post('/appointment/update/{id}', [AppointmentController::class, 'update']);
+    // Route::post('/appointment/delete/{id}', [AppointmentController::class, 'destroy']);
+
+    //Question and scale
+    Route::get('/questionscale', [QuestionScaleController::class, 'index']);
+    Route::post('/questionscale/store', [QuestionScaleController::class, 'store']);
     // Route::post('/appointment/update/{id}', [AppointmentController::class, 'update']);
     // Route::post('/appointment/delete/{id}', [AppointmentController::class, 'destroy']);
 

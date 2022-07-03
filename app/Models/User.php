@@ -62,4 +62,8 @@ class User extends Authenticatable
     public function state(){
         return $this->belongsTo(State::class, 'state_id');
     }
+    public function questionscale(){
+        return $this->hasMany(Scale::class, 'patient_id');
+    }
+    
 }

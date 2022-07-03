@@ -63,7 +63,7 @@ class PibFormulaController extends Controller
                 $this->apiOutput($this->getValidationError($validator), 200);
                }
            
-                foreach($request->question as $question){
+                // foreach($request->question as $question){
                     $formula = new PibFormula();
                     $formula->name = $request->name;
                     $formula->patient_id = $request->patient_id;
@@ -71,10 +71,10 @@ class PibFormulaController extends Controller
                     $formula->number = $request->number;
                     $formula->expiration_date = /*$request->expiration_date*/ Carbon::now();
                     // $formula->question_id = $request->question_id;
-                    $formula->question_id = $question;
+                    // $formula->question_id = $question;
                     $formula->created_by = $request->user()->id ?? null;
                     $formula->save();
-                }
+                // }
                 // $this->saveScale($request,$formula);
 
                 $this->apiSuccess();

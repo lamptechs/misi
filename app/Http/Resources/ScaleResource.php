@@ -24,6 +24,15 @@ class ScaleResource extends JsonResource
     }
 
     /**
+     * Collection
+     */
+    public static function collection($resource){
+        return tap(new ScaleCollection($resource), function ($collection) {
+            $collection->collects = __CLASS__;
+        });
+    }
+
+    /**
      * Transform the resource into an array.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -32,7 +41,7 @@ class ScaleResource extends JsonResource
     public function toArray($request)
     {
         return $this->filter([
-           
+            "patient"          => (new UserResource($this->patient))->hide(["created_by", "updated_by"]),
             "question"          => (new QuestionResource($this->question))->hide(["created_by", "updated_by"]),
             "scale" => $this->scale
 

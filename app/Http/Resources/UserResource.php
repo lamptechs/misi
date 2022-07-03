@@ -70,7 +70,8 @@ class UserResource extends JsonResource
             "state"             => (new StateResource($this->state))->hide(["created_by", "updated_by"]),
             "created_by"        => new AdminResource($this->createdBy),
             "updated_by"        => new AdminResource($this->updatedBy),
-            "upload_files"      => PatientUploadResource::collection($this->fileInfo),             
+            "upload_files"      => PatientUploadResource::collection($this->fileInfo), 
+            // "question and scale" => ScaleResource::collection($this->scale)           
         ]);
     }
 }
