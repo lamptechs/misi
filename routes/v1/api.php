@@ -152,8 +152,8 @@ Route::middleware(["auth:admin"])->group(function(){
     // Route::post('/appointment/delete/{id}', [AppointmentController::class, 'destroy']);
 
     //Question and scale
-    Route::get('/questionscale', [QuestionScaleController::class, 'index']);
-    Route::post('/questionscale/store', [QuestionScaleController::class, 'store']);
+    // Route::get('/questionscale', [QuestionScaleController::class, 'index']);
+    // Route::post('/questionscale/store', [QuestionScaleController::class, 'store']);
     // Route::post('/appointment/update/{id}', [AppointmentController::class, 'update']);
     // Route::post('/appointment/delete/{id}', [AppointmentController::class, 'destroy']);
 

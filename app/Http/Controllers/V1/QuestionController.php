@@ -62,7 +62,7 @@ class QuestionController extends Controller
        
                 $question = new Question();
                 $question->question = $request->question ?? null;
-                $question->scale = $request->scale ?? null;
+                $question->type = $request->type ?? null;
                 $question->created_by = $request->user()->id ?? null;
                 $question->save();
                 $this->apiSuccess();
@@ -120,7 +120,7 @@ class QuestionController extends Controller
        
                 $question = Question::find($id);
                 $question->question = $request->question ?? null;
-                $question->scale = $request->scale ?? null;
+                $question->type = $request->type ?? null;
                 $question->created_by = $request->user()->id ?? null;
                 $question->save();
                 $this->apiSuccess("Question Updated Successfull");

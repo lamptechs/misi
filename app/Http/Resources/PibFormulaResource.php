@@ -47,8 +47,7 @@ class PibFormulaResource extends JsonResource
             "type" => $this->type,
             "number" => $this->number,
             "expiration_date" => $this->expiration_date,
-            "qestion"      => $this->question_id,
-            // "question"      =>  ScaleResource::collection($this->scale),
+            "question"      =>  ScaleResource::collection($this->scale),
             // "question"          => (new QuestionResource($this->question))->hide(["created_by", "updated_by"]),
             "created_by"  => $this->created_by ? (new AdminResource($this->createdBy)) : null,
             "updated_by"  => $this->updated_by ? (new AdminResource($this->updatedBy)) : null

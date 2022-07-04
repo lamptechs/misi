@@ -41,7 +41,7 @@ class ScaleResource extends JsonResource
     public function toArray($request)
     {
         return $this->filter([
-            "patient"          => (new UserResource($this->patient))->hide(["created_by", "updated_by"]),
+            // "patient"          => (new UserResource($this->patient))->hide(["created_by", "updated_by"]),
             "question"          => (new QuestionResource($this->question))->hide(["created_by", "updated_by"]),
             "scale" => $this->scale
 

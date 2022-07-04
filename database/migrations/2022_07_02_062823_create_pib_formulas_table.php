@@ -20,7 +20,6 @@ return new class extends Migration
             $table->string('type')->nullable();
             $table->string('number')->nullable();
             $table->date('expiration_date')->nullable();
-            $table->text("question")->nullable();
             $table->unsignedBigInteger("created_by")->nullable();
             $table->unsignedBigInteger("updated_by")->nullable();
             $table->timestamps();

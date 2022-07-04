@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('scales', function (Blueprint $table) {
             $table->id();
-            $table->foreignId("patient_id")->nullable()->references("id")->on('users');
+            $table->foreignId("pib_id")->nullable()->references("id")->on('pib_formulas');
             $table->foreignId("question_id")->nullable()->references("id")->on('questions');
             $table->string('scale')->nullable();
             $table->timestamps();

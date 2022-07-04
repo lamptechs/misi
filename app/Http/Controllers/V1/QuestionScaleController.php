@@ -69,8 +69,8 @@ class QuestionScaleController extends Controller
  
                 $data = new Scale();
                 $data->patient_id = $request->patient_id;
-                $data->question_id = $value['question'];
-                $data->scale = $value['scale'];
+                $data->question_id = $request->question[$key] ?? null;
+                $data->scale = $request->scale[$key] ?? null;
                 $data->save();
 
 
