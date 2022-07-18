@@ -70,15 +70,17 @@ Route::middleware(["auth:admin"])->group(function(){
     Route::get('/ticket', [TicketController::class, 'index']);
     Route::get('/ticket/show', [TicketController::class, 'show']);
     Route::post('/ticket/store', [TicketController::class, 'store']);
-    Route::post('/ticket/update/{id}', [TicketController::class, 'update']);
+    Route::post('/ticket/update', [TicketController::class, 'update']);
     Route::post('/ticket/delete/{id}', [TicketController::class, 'destroy']);
 
-    //Therapist Create
-    Route::get('/therapist', [TherapistController::class, 'index']);
-    Route::get('/therapist/show', [TherapistController::class, 'show']);
-    Route::post('/therapist/store', [TherapistController::class, 'store']);
-    Route::post('/therapist/update/{id}', [TherapistController::class, 'update']);
-    Route::post('/therapist/delete/{id}', [TherapistController::class, 'destroy']);
+    //Therapist Section
+    Route::prefix('therapist')->group(function(){
+        Route::get('/', [TherapistController::class, 'index']);
+        Route::get('/show', [TherapistController::class, 'show']);
+        Route::post('/store', [TherapistController::class, 'store']);
+        Route::post('/update', [TherapistController::class, 'update']);
+        Route::post('/delete/{id}', [TherapistController::class, 'destroy']);
+    });
     
     //Therapist Service
     Route::get('/therapistService', [TherapistServiceController::class, 'index']);
@@ -102,7 +104,7 @@ Route::middleware(["auth:admin"])->group(function(){
     Route::get('/appointment', [AppointmentController::class, 'index']);
     Route::get('/appointment/show', [AppointmentController::class, 'show']);
     Route::post('/appointment/store', [AppointmentController::class, 'store']);
-    Route::post('/appointment/update/{id}', [AppointmentController::class, 'update']);
+    Route::post('/appointment/update/', [AppointmentController::class, 'update']);
     Route::post('/appointment/delete/{id}', [AppointmentController::class, 'destroy']);
 
     //Question

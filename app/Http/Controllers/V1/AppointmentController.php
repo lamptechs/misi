@@ -56,31 +56,6 @@ class AppointmentController extends Controller
     public function store(Request $request)
     {
         try{
-        //     $validator = Validator::make(
-        //         $request->all(),
-        //         [
-        //             // 'first_name' => 'required',
-        //             // 'last_name' => 'required',
-        //             // "email"     => ["required", "email", "unique:therapists"],
-        //             // "phone"     => ["required", "numeric", "unique:therapists"]
-        //         ]
-        //        );
-            
-        //    if ($validator->fails()) {
-        //     return $this->apiOutput($this->getValidationError($validator), 400);
-        //    }
-        try{
-
-            // $date  = $request->date;
-            // $dformat = 'd/m/Y';
-            // $time = $request->time;
-            // $tformat = 'H:i:m';
-            // Carbon\Carbon::createFromFormat($format, $input)
-            // if($request->time < date('H:i:s')){
-                // $request->time = date('H:i:s');
-            // }
-
-
             DB::beginTransaction();
                     
             $data = $this->getModel();
@@ -91,11 +66,7 @@ class AppointmentController extends Controller
             $data->therapist_schedule_id = $request->therapist_schedule_id;
             $data->number = $request->number;
             $data->history = $request->history ?? null;
-            // $data->date = Carbon::createFromFormat($dformat, $date);
-            // $data->time = Carbon::createFromFormat($tformat, $time);
             $data->date = Carbon::now();
-            // $data->time = Carbon::now();
-            // $data->date = $request->date;
             $data->time = $request->time;
             $data->fee = $request->fee;
             $data->language = $request->language;
@@ -104,19 +75,13 @@ class AppointmentController extends Controller
             $data->remarks = $request->remarks ?? null;
             $data->status = $request->status;
             $data->save();
-
             DB::commit();
-        
+            $this->apiSuccess("Appointment Created Successfully");
+            $this->data = (new AppointmentResource($data));
+            return $this->apiOutput();
         }catch(Exception $e){
             return $this->apiOutput($this->getError( $e), 500);
             DB::rollBack();
-        }
-        $this->apiSuccess("Appointment Created Successfully");
-        $this->data = (new AppointmentResource($data));
-        return $this->apiOutput();
-
-        }catch(Exception $e){
-            return $this->apiOutput($this->getError( $e), 500);
         }
     }
 
@@ -128,26 +93,17 @@ class AppointmentController extends Controller
      */
     public function show(Request $request)
     {
-        //
         try{
-           
-            $this->data = (new AppointmentResource (Appointment::find($request->id)));
+            $appointment = Appointmnet::find($request->id);
+            if( empty($appointment) ){
+                return $this->apiOutput("Appointment Data Not Found", 400);
+            }
+            $this->data = (new AppointmentResource ($appointment));
             $this->apiSuccess("Appointment Detail Show Successfully");
             return $this->apiOutput();
         }catch(Exception $e){
             return $this->apiOutput($this->getError($e), 500);
         }
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
     }
 
     /**
@@ -159,20 +115,15 @@ class AppointmentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        try{
-            //     $validator = Validator::make(
-        //         $request->all(),
-        //         [
-        //             // 'first_name' => 'required',
-        //             // 'last_name' => 'required',
-        //             // "email"     => ["required", "email", "unique:therapists"],
-        //             // "phone"     => ["required", "numeric", "unique:therapists"]
-        //         ]
-        //        );
-            
-        //    if ($validator->fails()) {
-        //     return $this->apiOutput($this->getValidationError($validator), 400);
-        //    }
+        $validator = Validator::make($request->all(),[
+            'therapist_id'  => ['required', "exists:therapists,id"],
+            "patient_id"    => ['required', "exists:users,id"],
+        ]);
+        
+        if ($validator->fails()) {
+            return $this->apiOutput($this->getValidationError($validator), 400);
+        }
+    
         try{
             DB::beginTransaction();
                     
@@ -199,17 +150,15 @@ class AppointmentController extends Controller
             $data->save();
 
             DB::commit();
+            $this->apiSuccess("Appointment Updated Successfully");
+            $this->data = (new AppointmentResource($data));
+            return $this->apiOutput();
 
         }catch(Exception $e){
             return $this->apiOutput($this->getError( $e), 500);
             DB::rollBack();
         }
-        $this->apiSuccess("Appointment Updated Successfully");
-        $this->data = (new AppointmentResource($data));
-        return $this->apiOutput();
-        }catch(Exception $e){
-            return $this->apiOutput($this->getError( $e), 500);
-        }
+        
     }
 
     /**

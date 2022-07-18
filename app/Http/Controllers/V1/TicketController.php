@@ -80,26 +80,17 @@ class TicketController extends Controller
      */
     public function show(Request $request)
     {
-        //
-        try{
-           
-            $this->data = (new TicketResource (Ticket::find($request->id)));
+        try{    
+            $ticket = Ticket::find($request->id);   
+            if( empty($ticket) ){
+                return $this->apiOutput("Ticket Data Not Found", 400);
+            }
+            $this->data = (new TicketResource($ticket));
             $this->apiSuccess("Ticket Detail Show Successfully");
             return $this->apiOutput();
         }catch(Exception $e){
             return $this->apiOutput($this->getError($e), 500);
         }
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        
     }
 
     /**
@@ -109,24 +100,22 @@ class TicketController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
         try{
         $validator = Validator::make(
-            $request->all(),
-            [
-                'patient_id' => 'required',
-                'therapist_id' => 'required' 
+            $request->all(),[
+                "id"            => ["required", "exixts:tickets,id"],
+                'patient_id'    => ['required'],
+                'therapist_id'  => ['required']
     
-            ]
-           );
+            ]);
             
-           if ($validator->fails()) {
-    
-            $this->apiOutput($this->getValidationError($validator), 200);
+           if ($validator->fails()) {    
+                $this->apiOutput($this->getValidationError($validator), 200);
            }
    
-            $ticket = Ticket::find($id);
+            $ticket = Ticket::find($request->id);
             $ticket->patient_id = $request->patient_id;
             $ticket->therapist_id = $request->therapist_id;
             $ticket->ticket_department_id = $request->ticket_department_id;
@@ -141,7 +130,7 @@ class TicketController extends Controller
             $ticket->updated_by = $request->user()->id ?? null;
             // $ticket->updated_at = Carbon::Now();
             $ticket->save();
-            $this->apiSuccess();
+            $this->apiSuccess("Ticket Info Updated successfully");
             $this->data = (new TicketResource($ticket));
             return $this->apiOutput();
         }catch(Exception $e){
