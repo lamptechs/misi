@@ -126,9 +126,17 @@ class AppointmentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request)
     {
         //
+        try{
+           
+            $this->data = (new AppointmentResource (Appointment::find($request->id)));
+            $this->apiSuccess("Appointment Detail Show Successfully");
+            return $this->apiOutput();
+        }catch(Exception $e){
+            return $this->apiOutput($this->getError($e), 500);
+        }
     }
 
     /**
