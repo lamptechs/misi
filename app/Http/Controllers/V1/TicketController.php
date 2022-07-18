@@ -81,6 +81,15 @@ class TicketController extends Controller
     public function show($id)
     {
         //
+        try{
+            // $patient = $this->getModel()->find($id);
+            $this->data = (new TicketResource (Ticket::find($id)));
+            $this->apiSuccess("Ticket Details Show Successfully");
+            return $this->apiOutput();
+
+        }catch(Exception $e){
+            return $this->apiOutput($this->getError($e), 500);
+        }
     }
 
     /**
