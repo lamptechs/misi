@@ -104,6 +104,7 @@ Route::middleware(["auth:admin"])->group(function(){
 
     //Ticket
     Route::get('/ticket', [TicketController::class, 'index']);
+    Route::get('/ticket/show/', [PatientController::class, 'show']);
     Route::post('/ticket/store', [TicketController::class, 'store']);
     Route::post('/ticket/update/{id}', [TicketController::class, 'update']);
     Route::post('/ticket/delete/{id}', [TicketController::class, 'destroy']);
