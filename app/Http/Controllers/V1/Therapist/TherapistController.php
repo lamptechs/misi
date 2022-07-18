@@ -200,6 +200,14 @@ class TherapistController extends Controller
     public function show($id)
     {
         //
+        try{
+           
+            $this->data = (new TherapistResource (Therapist::find($request->id)));
+            $this->apiSuccess("Therapist Detail Show Successfully");
+            return $this->apiOutput();
+        }catch(Exception $e){
+            return $this->apiOutput($this->getError($e), 500);
+        }
     }
 
 
