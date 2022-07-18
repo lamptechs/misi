@@ -78,14 +78,41 @@ class TicketController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request,$id)
     {
         //
         try{
+            $validator = Validator::make(
+            $request->all(),
+            [
+                'ticket_id' => 'required'
+    
+            ]
+           );
+            
+           if ($validator->fails()) {
+            $this->apiOutput($this->getValidationError($validator), 200);
+           }
             // $patient = $this->getModel()->find($id);
-            $this->data = (new TicketResource (Ticket::find($id)));
-            $this->apiSuccess("Ticket Detail Show Successfully");
+            $ticket = Ticket::find($id);
+            $ticket->patient_id = $request->patient_id;
+            $ticket->therapist_id = $request->therapist_id;
+            $ticket->ticket_department_id = $request->ticket_department_id;
+            $ticket->strike = $request->strike;
+            $ticket->strike_history = $request->strike_history ?? null;
+            $ticket->ticket_history = $request->ticket_history ?? null;
+            $ticket->remarks = $request->remarks ?? null;
+            $ticket->status = $request->status;
+            $ticket->updated_by = $request->user()->id ?? null;
+            // $ticket->updated_at = Carbon::Now();
+            $ticket->save();
+            $this->apiSuccess();
+            $this->data = (new TicketResource($ticket));
             return $this->apiOutput();
+            
+           // $this->data = (new TicketResource (Ticket::find($id)));
+          //  $this->apiSuccess("Ticket Detail Show Successfully");
+          //  return $this->apiOutput();
 
         }catch(Exception $e){
             return $this->apiOutput($this->getError($e), 500);
