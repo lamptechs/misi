@@ -48,11 +48,13 @@ Route::post('admin/logout', [AdminController::class, "logout"]);
 Route::middleware(["auth:admin"])->group(function(){
     
     //Patient Create
-    Route::get('/patient', [PatientController::class, 'index']);
-    Route::get('/patient/show/{id}', [PatientController::class, 'show']);
-    Route::post('/patient/store', [PatientController::class, 'store']);
-    Route::post('/patient/update/{id}', [PatientController::class, 'update']);
-    Route::post('/patient/delete/{id}', [PatientController::class, 'destroy']);
+    Route::prefix('therapist')->group(function(){
+        Route::get('', [PatientController::class, 'index']);
+        Route::get('/show', [PatientController::class, 'show']);
+        Route::post('/store', [PatientController::class, 'store']);
+        Route::post('/update', [PatientController::class, 'update']);
+        Route::post('/delete/{id}', [PatientController::class, 'destroy']);
+    });
     
     //Therapist Type
     Route::get('/therapist_type', [TherapistTypeController::class, 'index']);
