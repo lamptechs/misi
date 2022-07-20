@@ -48,7 +48,7 @@ Route::post('admin/logout', [AdminController::class, "logout"]);
 Route::middleware(["auth:admin"])->group(function(){
     
     //Patient Create
-    Route::prefix('therapist')->group(function(){
+    Route::prefix('patient')->group(function(){
         Route::get('', [PatientController::class, 'index']);
         Route::get('/show', [PatientController::class, 'show']);
         Route::post('/store', [PatientController::class, 'store']);
@@ -63,17 +63,23 @@ Route::middleware(["auth:admin"])->group(function(){
     Route::post('/therapist_type/delete/{id}', [TherapistTypeController::class, 'destroy']);
 
     //Ticket Department
-    Route::get('/ticket_department', [TicketDepartmentController::class, 'index']);
-    Route::post('/ticket_department/store', [TicketDepartmentController::class, 'store']);
-    Route::post('/ticket_department/update/{id}', [TicketDepartmentController::class, 'update']);
-    Route::post('/ticket_department/delete/{id}', [TicketDepartmentController::class, 'destroy']);
+    Route::prefix('ticket_department')->group(function(){
+        Route::get('/', [TicketDepartmentController::class, 'index']);
+        Route::post('/store', [TicketDepartmentController::class, 'store']);
+        Route::post('/update', [TicketDepartmentController::class, 'update']);
+        Route::post('/delete/{id}', [TicketDepartmentController::class, 'destroy']);
+    });
+    
 
     //Ticket
-    Route::get('/ticket', [TicketController::class, 'index']);
-    Route::get('/ticket/show', [TicketController::class, 'show']);
-    Route::post('/ticket/store', [TicketController::class, 'store']);
-    Route::post('/ticket/update', [TicketController::class, 'update']);
-    Route::post('/ticket/delete/{id}', [TicketController::class, 'destroy']);
+    Route::prefix('ticket')->group(function(){
+        Route::get('/', [TicketController::class, 'index']);
+        Route::get('/show', [TicketController::class, 'show']);
+        Route::post('/store', [TicketController::class, 'store']);
+        Route::post('/update', [TicketController::class, 'update']);
+        Route::post('/delete/{id}', [TicketController::class, 'destroy']);
+    });
+    
 
     //Therapist Section
     Route::prefix('therapist')->group(function(){
@@ -85,16 +91,22 @@ Route::middleware(["auth:admin"])->group(function(){
     });
     
     //Therapist Service
-    Route::get('/therapistService', [TherapistServiceController::class, 'index']);
-    Route::post('/therapistService/store', [TherapistServiceController::class, 'store']);
-    Route::post('/therapistService/update/{id}', [TherapistServiceController::class, 'update']);
-    Route::post('/therapistService/delete/{id}', [TherapistServiceController::class, 'destroy']);
+    Route::prefix('therapistService')->group(function(){
+        Route::get('/', [TherapistServiceController::class, 'index']);
+        Route::post('/store', [TherapistServiceController::class, 'store']);
+        Route::post('/update', [TherapistServiceController::class, 'update']);
+        Route::post('/delete/{id}', [TherapistServiceController::class, 'destroy']);
+    });
+    
 
     //Therapist Degree
-    Route::get('/therapist_degree', [TherapistDegreeController::class, 'index']);
-    Route::post('/therapist_degree/store', [TherapistDegreeController::class, 'store']);
-    Route::post('/therapist_degree/update/{id}', [TherapistDegreeController::class, 'update']);
-    Route::post('/therapist_degree/delete/{id}', [TherapistDegreeController::class, 'destroy']);
+    Route::prefix('therapist_degree')->group(function(){
+        Route::get('/', [TherapistDegreeController::class, 'index']);
+        Route::post('/store', [TherapistDegreeController::class, 'store']);
+        Route::post('/update/{id}', [TherapistDegreeController::class, 'update']);
+        Route::post('/delete/{id}', [TherapistDegreeController::class, 'destroy']);
+    });
+    
 
     //Therapist Schedule
     Route::get('/therapist_schedule', [TherapistScheduleController::class, 'index']);

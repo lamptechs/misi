@@ -84,9 +84,19 @@ class TherapistServiceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request)
     {
-        //
+        try{    
+            $therapistservice = TherapistService::find($request->id);
+            if( empty($therapistservice) ){
+                return $this->apiOutput("Ticket Data Not Found", 400);
+            }
+            $this->data = (new TicketResource($therapistservice));
+            $this->apiSuccess("Therapist Service Show Successfully");
+            return $this->apiOutput();
+        }catch(Exception $e){
+            return $this->apiOutput($this->getError($e), 500);
+        }
     }
 
     /**
@@ -95,9 +105,19 @@ class TherapistServiceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request)
     {
-        //
+        try{    
+            $therapistservice = TherapistService::find($request->id);
+            if( empty($therapistservice) ){
+                return $this->apiOutput("Ticket Data Not Found", 400);
+            }
+            $this->data = (new TicketResource($therapistservice));
+            $this->apiSuccess("Therapist Service Info Show Successfully");
+            return $this->apiOutput();
+        }catch(Exception $e){
+            return $this->apiOutput($this->getError($e), 500);
+        }
     }
 
     /**
@@ -107,7 +127,7 @@ class TherapistServiceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
         try{
         $validator = Validator::make(
@@ -124,7 +144,7 @@ class TherapistServiceController extends Controller
             $this->apiOutput($this->getValidationError($validator), 400);
            }
    
-            $therapistservice = TherapistService::find($id);
+            $therapistservice = TherapistService::find($request->id);
             $therapistservice->name = $request->name;
             $therapistservice->status = $request->status;
             $therapistservice->service_category_id  = $request->service_category_id ;

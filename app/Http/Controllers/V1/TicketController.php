@@ -105,9 +105,13 @@ class TicketController extends Controller
         try{
         $validator = Validator::make(
             $request->all(),[
-                "id"            => ["required", "exixts:tickets,id"],
+                "id"            => ["required", "exists:tickets,id"],
                 'patient_id'    => ['required'],
-                'therapist_id'  => ['required']
+                'therapist_id'  => ['required'],
+                "ticket_department_id" => ['required'],
+                "language"      => ['required', "string"],
+                "strike"        => ['required', "string"],
+                "status"        => ['required']
     
             ]);
             
@@ -121,7 +125,7 @@ class TicketController extends Controller
             $ticket->ticket_department_id = $request->ticket_department_id;
             $ticket->location = $request->location ?? null;
             $ticket->language = $request->language ?? null;
-            $ticket->date = /*$request->date*/ Carbon::now();
+            $ticket->date = now();
             $ticket->strike = $request->strike;
             $ticket->strike_history = $request->strike_history ?? null;
             $ticket->ticket_history = $request->ticket_history ?? null;

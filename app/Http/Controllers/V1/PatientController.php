@@ -237,14 +237,14 @@ class PatientController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request)
     {
         try{
-            $paitent = User::find($id);
-            $this->data = (new UserResource($paitent));
+            $paitent = User::find($request->id);
             if( empty($paitent) ){
                 return $this->apiOutput("Patient Data Not Found", 400);
             }
+            $this->data = (new UserResource($paitent));
             $this->apiSuccess("Patient Showed Successfully");
             return $this->apiOutput();
 
@@ -261,7 +261,7 @@ class PatientController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
         try{
             $validator = Validator::make($request->all(), [

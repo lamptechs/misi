@@ -70,9 +70,19 @@ class TicketDepartmentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request)
     {
-        //
+        try{    
+            $ticket_department = TicketDepartment::find($request->id);  
+            if( empty($ticket_department) ){
+                return $this->apiOutput("Ticket Data Not Found", 400);
+            }
+            $this->data = (new TicketResource($ticket_department));
+            $this->apiSuccess("Ticket Depertment Detail Show Successfully");
+            return $this->apiOutput();
+        }catch(Exception $e){
+            return $this->apiOutput($this->getError($e), 500);
+        }
     }
 
     /**
@@ -81,8 +91,19 @@ class TicketDepartmentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request)
     {
+        try{    
+            $ticket_department = TicketDepartment::find($request->id);
+            if( empty($ticket_department) ){
+                return $this->apiOutput("Ticket Data Not Found", 400);
+            }
+            $this->data = (new TicketResource($ticket_department));
+            $this->apiSuccess("Ticket Detail Show Successfully");
+            return $this->apiOutput();
+        }catch(Exception $e){
+            return $this->apiOutput($this->getError($e), 500);
+        }
         
     }
 
@@ -93,7 +114,7 @@ class TicketDepartmentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
         try{
         $validator = Validator::make(
@@ -110,7 +131,7 @@ class TicketDepartmentController extends Controller
             $this->apiOutput($this->getValidationError($validator), 200);
            }
    
-            $ticket_department = TicketDepartment::find($id);
+            $ticket_department = TicketDepartment::find($request->id);
             $ticket_department->name = $request->name;
             $ticket_department->status = $request->status;
             $ticket_department->remarks = $request->remarks ?? "";
