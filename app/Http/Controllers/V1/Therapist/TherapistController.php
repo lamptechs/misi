@@ -204,7 +204,7 @@ class TherapistController extends Controller
      */
     public function update(Request $request)
     {
-        
+        try{
         $validator = Validator::make($request->all(),[
             "id"        => ['required', "exixts:therapists,id"],
             'first_name' =>['required'],
@@ -216,13 +216,12 @@ class TherapistController extends Controller
         if ($validator->fails()) {
             return $this->apiOutput($this->getValidationError($validator), 400);
         }
-
-        try{
             DB::beginTransaction();
+            $data = Therapist::find($request->id);
             
             $data = $this->getModel()->find($request->id);
-            $data->updated_by = $request->user()->id;
-
+            $data->updated_by = $request->user()->id ?? null;
+            
             $data->first_name = $request->first_name;                  
             $data->last_name = $request->last_name;         
             $data->email = $request->email;
@@ -242,15 +241,25 @@ class TherapistController extends Controller
             $data->country_id = $request->country_id;
             $data->password = bcrypt($request->password);
             
+            if($request->hasFile('picture')){
+                $data->image_url = $this->uploadImage($request, 'picture', $this->patient_uploads, null,null,$data->image_url);
+            }
             $data->save();
             $this->updateFileInfo($request, $data);        
             DB::commit();
+            
+            try{
+                // event(new Registered($data));
+            }catch(Exception $e){
+                //
+            }
+            
             $this->apiSuccess("Therapist Info Updated Successfully");
-            $this->data = (new TherapistResource($data));
+            $this->data = (new UserResource($data));
             return $this->apiOutput(); 
         }
         catch(Exception $e){
-            DB::rollBack();
+             DB::rollBack();
             return $this->apiOutput($this->getError( $e), 500);
         }
     }
@@ -258,6 +267,7 @@ class TherapistController extends Controller
      //Update File Info
     public function updateFileInfo($request, $therapist){
         $data = TherapistUpload::find($request->ids);
+        //$data->updated_by   = $request->user()->id;
         $data->therapist_id = $therapist->id;
         $data->file_name    = $request->file_name ?? "Therapist Upload Updated";
         $data->file_url     = $this->uploadImage($request, 'file', $this->therapist_uploads,null,null,$data->file_url);
