@@ -115,6 +115,7 @@ class AppointmentController extends Controller
      */
     public function update(Request $request, $id)
     {
+        try{
         $validator = Validator::make($request->all(),[
             'therapist_id'  => ['required', "exists:therapists,id"],
             "patient_id"    => ['required', "exists:users,id"],
@@ -124,10 +125,10 @@ class AppointmentController extends Controller
             return $this->apiOutput($this->getValidationError($validator), 400);
         }
     
-        try{
             DB::beginTransaction();
-                    
-            $data = $this->getModel()->find($id);
+            
+            $data = Appointment::find($request->id);
+            //$data = $this->getModel()->find($id);
             $data->updated_by = $request->user()->id;
 
             $data->therapist_id = $request->therapist_id;
@@ -155,8 +156,8 @@ class AppointmentController extends Controller
             return $this->apiOutput();
 
         }catch(Exception $e){
-            return $this->apiOutput($this->getError( $e), 500);
             DB::rollBack();
+            return $this->apiOutput($this->getError( $e), 500);  
         }
         
     }
