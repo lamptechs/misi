@@ -206,7 +206,7 @@ class TherapistController extends Controller
     {
         try{
         $validator = Validator::make($request->all(),[
-            "id"        => ['required', "exixts:therapists,id"],
+            "id"        => ['required', "exists:therapists,id"],
             'first_name' =>['required'],
             'last_name' => ['required'],
             "email"     => ["required", "email", /*"unique:therapists"*/Rule::unique('therapists', 'email')->ignore($request->id)],
