@@ -217,9 +217,10 @@ class TherapistController extends Controller
             return $this->apiOutput($this->getValidationError($validator), 400);
         }
             DB::beginTransaction();
-            $data = Therapist::find($request->id);
-            
             $data = $this->getModel()->find($request->id);
+            //$data = Therapist::find($request->id);
+            
+            
             $data->updated_by = $request->user()->id ?? null;
             
             $data->first_name = $request->first_name;                  
@@ -255,7 +256,7 @@ class TherapistController extends Controller
             }
             
             $this->apiSuccess("Therapist Info Updated Successfully");
-            $this->data = (new UserResource($data));
+            $this->data = (new TherapistResource($data));
             return $this->apiOutput(); 
         }
         catch(Exception $e){
