@@ -267,7 +267,7 @@ class TherapistController extends Controller
 
      //Update File Info
     public function updateFileInfo($request, $therapist){
-        $data = TherapistUpload::find($request->ids);
+        $data = TherapistUpload::find($request->id);
         //$data->updated_by   = $request->user()->id;
         $data->therapist_id = $therapist->id;
         $data->file_name    = $request->file_name ?? "Therapist Upload Updated";
