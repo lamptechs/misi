@@ -53,7 +53,7 @@ class TicketController extends Controller
             $ticket = new Ticket();
             //$ticket = Str::of(patient_id)->padRight(5);
             //Str::substr($testString, 6);
-            $ticket->patient_id = $request->Str::substr(patient_id,6); 
+            $ticket->patient_id = $request->Str::substr(patient_id,5); 
             $ticket->therapist_id = $request->therapist_id;
             $ticket->ticket_department_id = $request->ticket_department_id;
             $ticket->location = $request->location ?? null;
