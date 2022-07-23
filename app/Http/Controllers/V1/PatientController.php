@@ -135,6 +135,8 @@ class PatientController extends Controller
                 $data->source = $request->source;
                 $data->first_name = $request->first_name;                  
                 $data->last_name = $request->last_name;
+                $data->patient_image_name =  $request-> image;
+                $data->patient_image_url_location =  $request-> image_url;
                 // $data->patient_picture_name = $imageName;            
                 // $data->patient_picture_location = $imageUrl;            
                 $data->email = $request->email;
