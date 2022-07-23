@@ -135,8 +135,15 @@ class PatientController extends Controller
                 $data->source = $request->source;
                 $data->first_name = $request->first_name;                  
                 $data->last_name = $request->last_name;
-                $data->image =  $request-> image;
-                $data->image_url =  $request-> image_url;
+                
+                //$file_path = $this->uploadImage($request, 'file', $this->patient_uploads,720);
+                
+                if($request->hasFile('image')){
+                    $data->image_url = $this->uploadImage($request, 'image', $this->patient_uploads, null,null,$data->image_url);
+                }
+                
+                //$data->image =  $request-> image;
+                //$data->image_url =  $request-> image_url;
                 // $data->patient_picture_name = $imageName;            
                 // $data->patient_picture_location = $imageUrl;            
                 $data->email = $request->email;
